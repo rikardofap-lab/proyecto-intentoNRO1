@@ -9,6 +9,3 @@ class Principal:
 
 p = Principal()
 p.ejecutarPrograma()
-
-
-
