@@ -1,4 +1,4 @@
-class Proyecto:
+class proyecto:
     __idProyecto = 0
     __nomProyecto = ""
     __descripcion = ""

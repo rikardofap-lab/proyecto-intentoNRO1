@@ -1,4 +1,4 @@
-class TipoAcceso:
+class tipoAcceso:
     __idTipoAcc = 0
     __nomTipoAcc = ""
 

@@ -1,11 +1,11 @@
-from Funciones import Funciones
+from Funciones import funciones
 
-class Principal:
-    __f = Funciones()
+class principal:
+    __f = funciones()
 
     def ejecutarPrograma(self):
         self.__f.menuInicial()
 #-----------------------------------------------------------------------
 
-p = Principal()
+p = principal()
 p.ejecutarPrograma()

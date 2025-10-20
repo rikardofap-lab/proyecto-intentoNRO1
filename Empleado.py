@@ -1,5 +1,5 @@
-from Persona import Persona
-class Empleado(Persona):
+from Persona import persona
+class empleado(persona):
     __fechaInicioContracto = ""
     __salario = 0
     __idEmpleado = 0 
@@ -10,7 +10,6 @@ class Empleado(Persona):
         pass
 
     #         GETTERS Y SETTERS 
-
 
 #------------------------------------------------------------
 #   FECHA INICIO CONTRATO 

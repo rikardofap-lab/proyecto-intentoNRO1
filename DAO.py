@@ -1,12 +1,12 @@
-from Empleado import Empleado
-from Proyecto import Proyecto
-from TipoAcceso import TipoAcceso
-from Usuario import Usuario
+from Empleado import empleado
+from Proyecto import proyecto
+from TipoAcceso import tipoAcceso
+from Usuario import usuario
 from os import system
 import pymysql
 from cryptography.fernet import Fernet
 
-class DAO:
+class dao:
     def __init__(self):
         pass
 #---------------------------------------------------------------------------------------------
@@ -29,15 +29,14 @@ class DAO:
 
 #----------------------------------------------------------------------------------------------
 
-    def comprobarRutEmpleado(self, rut):
+    def comprobarRutEmpleado(self, rut_formateado):
         try:
             sql = "SELECT rut_emp FROM empleados WHERE rut_emp = %s"
             self.conectar()
-            self.cursor.execute(sql, rut)
+            self.cursor.execute(sql, rut_formateado)
             rs = self.cursor.fetchone()
             self.desconectar()
             return rs
         except Exception as e:
             system("cls")
             print(f"Error al comprobar el RUT del empleado (DAO): {e}")
-            

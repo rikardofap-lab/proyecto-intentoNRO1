@@ -1,6 +1,6 @@
-from Empleado import Empleado
+from Empleado import empleado
 
-class Usuario(Empleado):
+class usuario(empleado):
     __idUsuario = 0
     __nombreUsuario = ""
     __contrasena = ""

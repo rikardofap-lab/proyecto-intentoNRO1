@@ -1,19 +1,20 @@
-from Empleado import Empleado
-from Proyecto import Proyecto
-from TipoAcceso import TipoAcceso
-from Usuario import Usuario
-from DAO import DAO
+from Empleado import empleado
+from Proyecto import proyecto
+from TipoAcceso import tipoAcceso
+from Usuario import usuario
+from DAO import dao
 from prettytable import PrettyTable
+from datetime import date
 from os import system
 import os
 
-emp = Empleado()
-pro = Proyecto()
-tip = TipoAcceso()
-usu = Usuario()
-dao = DAO()
+class funciones:
+    emp = empleado()
+    pro = proyecto()
+    tip = tipoAcceso()
+    usu = usuario()
+    dao = dao()
 
-class Funciones:
     def __init__(self):
         pass
 #-------------------------------------------------------------------------------------------
@@ -228,6 +229,7 @@ class Funciones:
                 system("pause")
                 self.__asignacionProyectos()
 
+#-------------------------------------------------------------------------------------------
     def salir(self):
         system("cls")
         os._exit(1)
@@ -242,26 +244,42 @@ class Funciones:
                 print("----------------------------")
                 print("--- CREAR EMPLEADO (RUT) ---")
                 print("----------------------------")
-                rut = input("\nIngrese rut de empleado SIN puntos y CON guion: ")
-                if rut.isdigit() and (len(rut.strip()) <= 10 or len(rut.strip()) >= 9):
-                    emp.setRut(rut)
-                    print("\nRut guardado correctamente:", rut)
-                    system("pause")
-                    break
-                else:
-                    print("\nEl rut debe tener entre 10 y 12 caracteres")
-                    system("pause")
-                    self.__crearEmpleado()
+                print("¿Estás seguro de crear un nuevo empleado?")
+                print("1. Si")
+                print("2. No")
+                op = int(input("\nDigite una opción: "))
+                if op == 2:
+                    self.menuInicial()
+                    return
+                elif op == 1:
+                    system("cls")
+                    rut_sin_formato = input("\nIngrese rut del nuevo empleado con digito verificador (SIN puntos y SIN guion): ").strip()
+                    if rut_sin_formato.isdigit() and (len(rut_sin_formato) <= 10 and len(rut_sin_formato) >= 8):                      
+                        cuerpo = rut_sin_formato[:-1]  # todos menos el último dígito
+                        dv = rut_sin_formato[-1]       # último dígito (dígito verificador)
+                        rut_formateado = f"{cuerpo}-{dv}"
+                        if self.dao.comprobarRutEmpleado(rut_formateado) is not None:
+                            print(f"---ERROR, El rut ingresado ya existe!! {rut_formateado}", end="\n\n")
+                            system("pause")
+                            continue
+                        else:
+                            print("\nRut guardado correctamente:", rut_formateado)
+                            system("pause")
+                            break
+                    else:
+                        print("\nEl rut debe tener entre 8 y 10 digitos (sin puntos ni guion) y solo contener numeros")
+                        system("pause")
+                        continue
 
             except ValueError:
                 print("\n¡ERROR! La opcion solo puede ser un numero entero positivo")
                 system("pause")
-                self.__crearEmpleado()
+                continue
 
             except Exception as e:
                 print(f"\n¡ERROR! Al ingresar el rut del empleado: {e}", end="\n\n")
                 system("pause")
-                self.__crearEmpleado()
+                continue
         # NOMBRE ---------------------------------------------------------------------------
         while True:
             try:
@@ -292,18 +310,17 @@ class Funciones:
                 print("-----------------------------------------")
                 appPaterno = input("\nIngrese apellido paterno del empleado: ")
                 if appPaterno.isalpha() and len(appPaterno.strip()) >= 2 and len(appPaterno.strip()) <= 20:
-                    emp.setApellidoPaterno(appPaterno)
                     print("\nApellido paterno guardado correctamente:", appPaterno)
                     system("pause")
                     break
                 else:
                     print("\nEl apellido debe tener entre 2 y 20 caracteres")
                     system("pause")
-                    self.__crearEmpleado()
+                    continue
             except Exception as e:
                 print(f"\n¡ERROR! Al ingresar el apellido del empleado: {e}", end="\n\n")
                 system("pause")
-                self.__crearEmpleado()
+                continue
         # APELLIDO MATERNO ------------------------------------------------------------------
         while True:
             try:
@@ -313,18 +330,17 @@ class Funciones:
                 print("-----------------------------------------")
                 appMaterno = input("\nIngrese apellido materno del empleado: ")
                 if appMaterno.isalpha() and len(appMaterno.strip()) >= 2 and len(appMaterno.strip()) <= 20:
-                    emp.setApellidoMaterno(appMaterno)
                     print("\nApellido materno guardado correctamente:", appMaterno)
                     system("pause")
                     break
                 else:
                     print("\nEl apellido debe tener entre 2 y 20 caracteres")
                     system("pause")
-                    self.__crearEmpleado()
+                    continue
             except Exception as e:
                 print(f"\n¡ERROR! Al ingresar el apellido del empleado: {e}", end="\n\n")
                 system("pause")
-                self.__crearEmpleado()
+                continue
         # DIRECCION ------------------------------------------------------------------------
         while True:
             try:
@@ -334,19 +350,18 @@ class Funciones:
                 print("----------------------------------")
                 direccion = input("\nIngrese direccion del empleado: ")
                 if len(direccion.strip()) >= 2 and len(direccion.strip()) <= 60:
-                    emp.setDireccion(direccion)
                     print("\nDirección guardada correctamente:", direccion)
                     system("pause")
                     break
                 else:
                     print("\nLa direccion debe tener entre 2 y 60 caracteres")
                     system("pause")
-                    self.__crearEmpleado()
+                    continue
             except Exception as e:
                 print(f"\n¡ERROR! Al ingresar la direccion del empleado: {e}", end="\n\n")
                 system("pause")
-                self.__crearEmpleado()
-        # NRO TELEFONO ---------------------------------------------------------------------
+                continue
+        # NRO TELEFONO --------------------------------------------------------------------------------
         while True:
             try:
                 system("cls")
@@ -354,28 +369,28 @@ class Funciones:
                 print("--- CREAR EMPLEADO (TELEFONO) ---")
                 print("---------------------------------")
 
-                nroTelefono = input("\nIngrese número de teléfono del empleado (8 dígitos): ")
+                nroTelefono = input("\nIngrese número de teléfono del empleado (9 dígitos) (SIN +56): ")
 
-                if nroTelefono.isdigit() and len(nroTelefono) == 8:
-                    nroTelefono = "+569" + nroTelefono
-                    emp.setNroTelefono(nroTelefono)
+                if nroTelefono.isdigit() and len(nroTelefono) == 9:
+                    nroTelefono = "+56" + nroTelefono
                     print("\nNúmero guardado correctamente:", nroTelefono)
                     system("pause")
                     break
                 else:
                     print("\nERROR: El número debe tener exactamente 8 dígitos y solo contener números.")
                     system("pause")
+                    continue
 
             except ValueError:
                 print("\n¡ERROR! El numero de telefono debe ser escrito solo con numeros")
                 system("pause")
-                self.__crearEmpleado()
+                continue
 
             except Exception as e:
                 print(f"\n¡ERROR! Al ingresar el numero de telefono del empleado: {e}", end="\n\n")
                 system("pause")
-                self.__crearEmpleado()
-        # EMAIL ----------------------------------------------------------------------------
+                continue
+        # EMAIL ----------------------------------------------------------------------------------------
         while True:
             try:
                 system("cls")
@@ -383,20 +398,42 @@ class Funciones:
                 print("--- CREAR EMPLEADO (EMAIL) ---")
                 print("------------------------------")
                 email = input("\nIngrese email del empleado: ")
-                if len(email.strip()) >= 18 and len(email.strip()) <= 60:
-                    emp.setEmail(email)
+                if len(email.strip()) >= 10 and len(email.strip()) <= 60:
                     print("\nEmail guardado correctamente:", email)
                     system("pause")
                     break
                 else:
                     print("\nEl email debe tener entre 18 y 60 caracteres")
                     system("pause")
-                    self.__crearEmpleado()
+                    continue
             except Exception as e:
                 print(f"\n¡ERROR! Al ingresar el email del empleado: {e}", end="\n\n")
-                self.__crearEmpleado()
+                continue
+        # FECHA DE NACIMIENTO ----------------------------------------------------------------------------
+        while True:
+            try:
+                system("cls")
+                print("----------------------------------")
+                print("----- CREAR EMPLEADO (FECHA) -----")
+                print("----------------------------------")
 
+                print("\nIngrese la fecha de nacimiento del empleado:")
+                dia = int(input("Día (DD): "))
+                mes = int(input("Mes (MM): "))
+                anio = int(input("Año (AAAA): "))
 
+                # Validar y construir la fecha
+                fechaNacimiento = date(anio, mes, dia)
+                fechaFormateada = fechaNacimiento.strftime("%Y-%m-%d")
+
+                print(f"\nFecha registrada correctamente: {fechaFormateada}")
+                system("pause")
+                break
+
+            except ValueError:
+                print("\nFecha inválida. Verifique los valores ingresados.")
+                system("pause")
+                continue
 
     def __listarEmpleados(self):
         pass

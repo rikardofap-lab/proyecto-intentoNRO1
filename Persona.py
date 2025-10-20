@@ -1,4 +1,4 @@
-class Persona():
+class persona():
     __rut = ""
     __nombres = ""
     __apellidoPaterno = ""
