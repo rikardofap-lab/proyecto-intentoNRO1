@@ -6,6 +6,8 @@ class Persona():
     __direccion = ""
     __nroTelefono = ""
     __email = ""
+    __fechaNacimiento = ""
+
 
     def __init__ (self):
         pass
@@ -67,3 +69,10 @@ class Persona():
     
     def setEmail(self, email):
         self.__email = email
+#------------------------------------------------------------
+#   FECHA NACIMIENTO
+    def getFechaNacimiento(self):
+        return self.__fechaNacimiento
+    
+    def setFechaNacimiento(self, fechaNacimiento):
+        self.__fechaNacimiento = fechaNacimiento

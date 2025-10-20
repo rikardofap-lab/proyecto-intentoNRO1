@@ -1,22 +1,20 @@
-from Empleado import Empleado
-
 class Proyecto:
     __idProyecto = 0
     __nomProyecto = ""
     __descripcion = ""
     __fechaInicio = ""
-    __emple = Empleado()
+    __empleadosAsignados = [] # Debería ser una lista para almacenar varios empleados
     __idEstado = 0
     __nomEstado = ""
 
     def __init__(self):
-        pass
+        self.__empleadosAsignados = [] # Inicializamos la lista en el constructor
 
         #       GETTERS Y SETTERS
 
 #------------------------------------------------------------
 #   ID PROYECTO
-    def getIdPryecto(self):
+    def getIdProyecto(self):
         return self.__idProyecto
     
     def setIdProyecto (self, idProyecto):
@@ -49,10 +47,10 @@ class Proyecto:
 #------------------------------------------------------------
 #   EMPLEADOS ASIGNADOS
     def getEmpleAsignados(self):
-        return self.__empleAsignados
+        return self.__empleadosAsignados
     
     def setEmpleAsignados(self, empleAsignados):
-        self.__empleAsignados = empleAsignados
+        self.__empleadosAsignados = empleAsignados
 #------------------------------------------------------------
 #   ID ESTADO 
     def getIdEstado(self):

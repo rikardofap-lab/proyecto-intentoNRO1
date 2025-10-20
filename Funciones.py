@@ -57,7 +57,7 @@ class Funciones:
                     system("pause")
                     self.menuInicial()
             except Exception as e:
-                print("\n¡Error Al Capturar Opcion De Menú Inicial!!", end="\n\n")
+                print(f"\n¡Error Al Capturar Opcion De Menú Inicial!!{e}", end="\n\n")
                 system("pause")
                 self.menuInicial()
 
@@ -104,7 +104,7 @@ class Funciones:
                 system("pause")
                 self.__menuGerente()
             except Exception as e:
-                print("\n¡Error Al Capturar Opcion De Menú Gerente!!", end="\n\n")
+                print(f"\n¡Error Al Capturar Opcion De Menú Gerente!!{e}", end="\n\n")
                 system("pause")
                 self.__menuGerente()
 
@@ -148,7 +148,7 @@ class Funciones:
                 system("pause")
                 self.__menuGestionProyectos()
             except Exception as e:
-                print("\n¡Error Al Capturar Opcion De Menú Gestion Proyectos!!", end="\n\n")
+                print(f"\n¡Error Al Capturar Opcion De Menú Gestion Proyectos!!{e}", end="\n\n")
                 system("pause")
                 self.__menuGestionProyectos()
                 system("pause")
@@ -170,7 +170,7 @@ class Funciones:
                 system("pause")
                 self.menuInicial()
             except Exception as e:
-                print("\n--- Error Al Capturar Rut (Login)!! ---", end="\n\n")
+                print(f"\n--- Error Al Capturar Rut (Login)!! --- {e}", end="\n\n")
                 system("pause")
                 self.menuInicial()
         #-----------------------------------------------------------------------------------------
@@ -185,7 +185,7 @@ class Funciones:
                 else:
                     break
             except Exception as e:
-                print("\n--- Error Al Capturar Contraseña (Login)!! ---", end="\n\n")
+                print(f"\n--- Error Al Capturar Contraseña (Login)!! --- {e}", end="\n\n")
                 system("pause")
                 self.menuInicial()
 
@@ -224,12 +224,225 @@ class Funciones:
                 self.__asignacionProyectos()
 
             except Exception as e:
-                print("\n¡Error Al Capturar Opcion De Menú Asignación Proyectos!!", end="\n\n")
+                print(f"\n¡Error Al Capturar Opcion De Menú Asignación Proyectos!!{e}", end="\n\n")
                 system("pause")
                 self.__asignacionProyectos()
-
-
 
     def salir(self):
         system("cls")
         os._exit(1)
+
+#-------------------------------------------------------------------------------------------
+#   FUNCIONES MENU GERENTE
+    def __crearEmpleado(self):
+        # RUT ------------------------------------------------------------------------------
+        while True:
+            try:
+                system("cls")
+                print("----------------------------")
+                print("--- CREAR EMPLEADO (RUT) ---")
+                print("----------------------------")
+                rut = input("\nIngrese rut de empleado SIN puntos y CON guion: ")
+                if rut.isdigit() and (len(rut.strip()) <= 10 or len(rut.strip()) >= 9):
+                    emp.setRut(rut)
+                    print("\nRut guardado correctamente:", rut)
+                    system("pause")
+                    break
+                else:
+                    print("\nEl rut debe tener entre 10 y 12 caracteres")
+                    system("pause")
+                    self.__crearEmpleado()
+
+            except ValueError:
+                print("\n¡ERROR! La opcion solo puede ser un numero entero positivo")
+                system("pause")
+                self.__crearEmpleado()
+
+            except Exception as e:
+                print(f"\n¡ERROR! Al ingresar el rut del empleado: {e}", end="\n\n")
+                system("pause")
+                self.__crearEmpleado()
+        # NOMBRE ---------------------------------------------------------------------------
+        while True:
+            try:
+                system("cls")
+                print("-------------------------------")
+                print("--- CREAR EMPLEADO (NOMBRE) ---")
+                print("-------------------------------")
+                nombre = input("\nIngrese nombre de empleado: ")
+                if nombre.isalpha() and len(nombre.strip()) >= 2 and len(nombre.strip()) <= 20:
+                    emp.setNombres(nombre)
+                    print("\nNombre guardado correctamente:", nombre)
+                    system("pause")
+                    break
+                else:
+                    print("\nEl nombre debe tener entre 2 y 20 caracteres")
+                    system("pause")
+                    self.__crearEmpleado()
+            except Exception as e:
+                print(f"\n¡ERROR! Al ingresar el nombre del empleado: {e}", end="\n\n")
+                system("pause")
+                self.__crearEmpleado()
+        # APELLIDO PATERNO ------------------------------------------------------------------
+        while True:
+            try:
+                system("cls")
+                print("-----------------------------------------")
+                print("--- CREAR EMPLEADO (APELLIDO PATERNO) ---")
+                print("-----------------------------------------")
+                appPaterno = input("\nIngrese apellido paterno del empleado: ")
+                if appPaterno.isalpha() and len(appPaterno.strip()) >= 2 and len(appPaterno.strip()) <= 20:
+                    emp.setApellidoPaterno(appPaterno)
+                    print("\nApellido paterno guardado correctamente:", appPaterno)
+                    system("pause")
+                    break
+                else:
+                    print("\nEl apellido debe tener entre 2 y 20 caracteres")
+                    system("pause")
+                    self.__crearEmpleado()
+            except Exception as e:
+                print(f"\n¡ERROR! Al ingresar el apellido del empleado: {e}", end="\n\n")
+                system("pause")
+                self.__crearEmpleado()
+        # APELLIDO MATERNO ------------------------------------------------------------------
+        while True:
+            try:
+                system("cls")
+                print("-----------------------------------------")
+                print("--- CREAR EMPLEADO (APELLIDO MATERNO) ---")
+                print("-----------------------------------------")
+                appMaterno = input("\nIngrese apellido materno del empleado: ")
+                if appMaterno.isalpha() and len(appMaterno.strip()) >= 2 and len(appMaterno.strip()) <= 20:
+                    emp.setApellidoMaterno(appMaterno)
+                    print("\nApellido materno guardado correctamente:", appMaterno)
+                    system("pause")
+                    break
+                else:
+                    print("\nEl apellido debe tener entre 2 y 20 caracteres")
+                    system("pause")
+                    self.__crearEmpleado()
+            except Exception as e:
+                print(f"\n¡ERROR! Al ingresar el apellido del empleado: {e}", end="\n\n")
+                system("pause")
+                self.__crearEmpleado()
+        # DIRECCION ------------------------------------------------------------------------
+        while True:
+            try:
+                system("cls")
+                print("----------------------------------")
+                print("--- CREAR EMPLEADO (DIRECCION) ---")
+                print("----------------------------------")
+                direccion = input("\nIngrese direccion del empleado: ")
+                if len(direccion.strip()) >= 2 and len(direccion.strip()) <= 60:
+                    emp.setDireccion(direccion)
+                    print("\nDirección guardada correctamente:", direccion)
+                    system("pause")
+                    break
+                else:
+                    print("\nLa direccion debe tener entre 2 y 60 caracteres")
+                    system("pause")
+                    self.__crearEmpleado()
+            except Exception as e:
+                print(f"\n¡ERROR! Al ingresar la direccion del empleado: {e}", end="\n\n")
+                system("pause")
+                self.__crearEmpleado()
+        # NRO TELEFONO ---------------------------------------------------------------------
+        while True:
+            try:
+                system("cls")
+                print("---------------------------------")
+                print("--- CREAR EMPLEADO (TELEFONO) ---")
+                print("---------------------------------")
+
+                nroTelefono = input("\nIngrese número de teléfono del empleado (8 dígitos): ")
+
+                if nroTelefono.isdigit() and len(nroTelefono) == 8:
+                    nroTelefono = "+569" + nroTelefono
+                    emp.setNroTelefono(nroTelefono)
+                    print("\nNúmero guardado correctamente:", nroTelefono)
+                    system("pause")
+                    break
+                else:
+                    print("\nERROR: El número debe tener exactamente 8 dígitos y solo contener números.")
+                    system("pause")
+
+            except ValueError:
+                print("\n¡ERROR! El numero de telefono debe ser escrito solo con numeros")
+                system("pause")
+                self.__crearEmpleado()
+
+            except Exception as e:
+                print(f"\n¡ERROR! Al ingresar el numero de telefono del empleado: {e}", end="\n\n")
+                system("pause")
+                self.__crearEmpleado()
+        # EMAIL ----------------------------------------------------------------------------
+        while True:
+            try:
+                system("cls")
+                print("------------------------------")
+                print("--- CREAR EMPLEADO (EMAIL) ---")
+                print("------------------------------")
+                email = input("\nIngrese email del empleado: ")
+                if len(email.strip()) >= 18 and len(email.strip()) <= 60:
+                    emp.setEmail(email)
+                    print("\nEmail guardado correctamente:", email)
+                    system("pause")
+                    break
+                else:
+                    print("\nEl email debe tener entre 18 y 60 caracteres")
+                    system("pause")
+                    self.__crearEmpleado()
+            except Exception as e:
+                print(f"\n¡ERROR! Al ingresar el email del empleado: {e}", end="\n\n")
+                self.__crearEmpleado()
+
+
+
+    def __listarEmpleados(self):
+        pass
+
+    def __buscarEmpleado(self):
+        pass
+
+    def __modificarEmpleado(self):
+        pass
+
+    def __eliminarEmpleado(self):
+        pass
+
+    def __estadisticasEmpleados(self):
+        pass
+
+#-------------------------------------------------------------------------------------------
+#   FUNCIONES MENU GESTION DE PROYECTOS
+    def __crearProyecto(self):
+        pass
+
+    def __listarProyectos(self):
+        pass
+
+    def __buscarProyecto(self):
+        pass
+
+    def __modificarProyecto(self):
+        pass
+
+    def __eliminarProyecto(self):
+        pass
+
+    def __estadisticasProyectos(self):
+        pass
+
+#-------------------------------------------------------------------------------------------
+#   FUNCIONES MENU ASIGNACION DE PROYECTOS
+    def __asignarEmpleado(self):
+        pass
+
+    def __reasignarEmpleado(self):
+        pass
+
+    def __listarEmpleadosAsignados(self):
+        pass
+
+    def __listarEmpleadosSinAsignar(self):
+        pass

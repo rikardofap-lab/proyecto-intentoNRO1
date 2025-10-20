@@ -1,12 +1,9 @@
 from Empleado import Empleado
-from TipoAcceso import TipoAcceso
 
 class Usuario(Empleado):
     __idUsuario = 0
+    __nombreUsuario = ""
     __contrasena = ""
-    __tipAcc = TipoAcceso()
-    __idEstado = 0
-    __nomEstado = ""
 
     def __init__ (self):
         pass
@@ -17,37 +14,19 @@ class Usuario(Empleado):
 #   ID USUARIO
     def getIdUsuario(self):
         return self.__idUsuario
-    
     def setIdUsuario(self, idUsuario):
-        self.idUsuario = idUsuario
+        self.__idUsuario = idUsuario
+
+#------------------------------------------------------------
+#   NOMBRE USUARIO
+    def getNombreUsuario(self):
+        return self.__nombreUsuario
+    def setNombreUsuario(self, nombreUsuario):
+        self.__nombreUsuario = nombreUsuario
 
 #------------------------------------------------------------
 #   CONTRASENA
     def getContrasena(self):
         return self.__contrasena
-    
     def setContrasena(self, contrasena):
-        self.contrasena = contrasena
-
-#------------------------------------------------------------
-#   TIPO ACCESO
-    def getTipoacc(self):
-        return self.__tipAcc
-    
-    def setTipAcc(self, tipAcc):
-        self.__tipAcc = tipAcc
-#------------------------------------------------------------
-#   ID ESTADO 
-    def getIdEstado(self):
-        return self.__idEstado
-    
-    def setIdEstado(self, idEstado):
-        self.__idEstado = idEstado
-    
-#------------------------------------------------------------
-#   NOMBRE ESTADO 
-    def getNombreEstado(self):
-        return self.__nomEstado
-    
-    def setNombreEstado(self, nombreEstado):
-        self.__nomEstado = nombreEstado
+        self.__contrasena = contrasena
