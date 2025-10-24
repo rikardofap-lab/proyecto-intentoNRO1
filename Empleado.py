@@ -1,10 +1,17 @@
 from Persona import persona
+
+
 class empleado(persona):
-    __fechaInicioContracto = ""
+    __fechaInicioContrato = ""
     __salario = 0
     __idEmpleado = 0 
     __idEstado = 0
     __nomEstado = ""
+    __idTipoAcc = 0
+    __idProyecto = None  # Corresponde a id_pro en la BD (puede ser NULL)
+    __nombreUsuario = None
+    __contrasena = None
+
 
     def __init__(self):
         pass
@@ -13,11 +20,11 @@ class empleado(persona):
 
 #------------------------------------------------------------
 #   FECHA INICIO CONTRATO 
-    def getfechaInicioContracto(self):
-        return self.__fechaInicioContracto
+    def getfechaInicioContrato(self):
+        return self.__fechaInicioContrato
     
     def setFechaInicioContrato(self, fechaInicioContrato):
-        self.__fechaInicioContracto = fechaInicioContrato
+        self.__fechaInicioContrato = fechaInicioContrato
 
 #------------------------------------------------------------
 #   SALARIO 
@@ -49,3 +56,35 @@ class empleado(persona):
     
     def setNombreEstado(self, nombreEstado):
         self.__nomEstado = nombreEstado
+
+#------------------------------------------------------------
+#   ID TIPO DE ACCESO (INT)
+    def getIdTipoAcc(self):
+        return self.__idTipoAcc
+    
+    def setIdTipoAcc(self, idTipoAcc):
+        self.__idTipoAcc = idTipoAcc
+
+#------------------------------------------------------------
+#   ID PROYECTO (INT o None)
+    def getIdProyecto(self):
+        return self.__idProyecto
+    
+    def setIdProyecto(self, idProyecto):
+        self.__idProyecto = idProyecto
+
+#------------------------------------------------------------
+#   NOMBRE DE USUARIO (STRING o None)
+    def getNombreUsuario(self):
+        return self.__nombreUsuario
+    
+    def setNombreUsuario(self, nombreUsuario):
+        self.__nombreUsuario = nombreUsuario
+
+#------------------------------------------------------------
+#   CONTRASEÑA (STRING/BYTES o None)
+    def getContrasena(self):
+        return self.__contrasena
+    
+    def setContrasena(self, contrasena):
+        self.__contrasena = contrasena

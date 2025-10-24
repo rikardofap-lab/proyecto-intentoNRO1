@@ -59,8 +59,8 @@ INSERT INTO Proyectos (nom_pro, des_pro, fec_ini_pro, id_est) VALUES
 
 -- Un Gerente con acceso al sistema
 INSERT INTO empleados (rut_emp, nom_emp, app_emp, apm_emp, dir_emp, tel_emp, ema_emp, fec_nac_emp, fec_ini_emp, sal_emp, id_est, id_pro, id_tip_acc, nom_usu, con_usu) VALUES 
-('11111111-1', 'Wilmer', 'Alvarez', 'Riera', 'Av. Principal 123', '+56911111111', 'ricardo.alva@empresa.com', '1980-05-20', '2010-03-01', 2500000, 1, NULL, 2, 'rsoto', 'pass_gerente'),
+('11111111-1', 'Wilmer', 'Alvarez', 'Riera', 'Av. Principal 123', '+56911111111', 'ricardo.alva@empresa.com', '1980-05-20', '2010-03-01', 2500000, 1, NULL, 2, 'walvarez', 'gerente'),
 -- Un empleado de RRHH/Gestión de Proyectos con acceso al sistema
-('22222222-2', 'Carolina', 'Mora', 'Perez', 'Calle Falsa 456', '+56922222222', 'carolina.mora@empresa.com', '1985-08-15', '2015-06-10', 1500000, 1, NULL, 1, 'cmora', 'pass_rrhh'),
+('22222222-2', 'Carolina', 'Mora', 'Perez', 'Calle Falsa 456', '+56922222222', 'carolina.mora@empresa.com', '1985-08-15', '2015-06-10', 1500000, 1, NULL, 1, 'cmora', 'rrhh'),
 -- Un empleado sin acceso, habilitado y sin proyecto (listo para ser asignado)
 ('33333333-3', 'Juan', 'Gonzalez', 'Rojas', 'Pasaje Los Lirios 789', '+56933333333', 'juan.gonzalez@empresa.com', '1990-11-30', '2020-09-01', 800000, 1, NULL, 3, NULL, NULL);
