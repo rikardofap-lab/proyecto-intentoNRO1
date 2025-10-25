@@ -8,21 +8,20 @@ from cryptography.fernet import Fernet
 class dao:
     def __init__(self):
         pass
+
+    # Clave para encriptar/desencriptar. DEBE ser la misma que usaste para generar la clave.
+    # En una aplicación real, esto se gestionaría de forma más segura (ej. variables de entorno).
+    __clave_fernet = b"5Jp-fpyG6Cx8bgaPeBMWQtCng_Gjr6eUmaTvu3R5IUs="
 #---------------------------------------------------------------------------------------------
 
-
     def conectar(self):
-        try:
-            self.con = pymysql.connect(
-                host = "localhost",
-                user = "root",
-                password = "",
-                db = "BD_IntentoNro1"
-            )
-            self.cursor = self.con.cursor()
-            print("Conexion Exitosa")
-        except Exception as e:
-            print(f"ERROR DE CONEXION A LA BASE DE DATOS (DAO): {e}")
+        self.con = pymysql.connect(
+            host = "localhost",
+            user = "root",
+            password = "",
+            database = "bd_intento_nro1" 
+        )
+        self.cursor = self.con.cursor()
 #----------------------------------------------------------------------------------------------
 
     def desconectar(self):
@@ -34,7 +33,7 @@ class dao:
         try:
             sql = "SELECT rut_emp FROM empleados WHERE rut_emp = %s"
             self.conectar()
-            self.cursor.execute(sql, rut_formateado)
+            self.cursor.execute(sql, (rut_formateado,))
             rs = self.cursor.fetchone()
             self.desconectar()
             return rs
@@ -43,23 +42,21 @@ class dao:
             print(f"Error al comprobar el RUT del empleado (DAO): {e}")
 
 #----------------------------------------------------------------------------------------------
-# COMPRUEBO SI EL NOMBRE DE USUARIO DEL EMPLEADO ESTÁ O NO EN LA BASE DE DATOS
-    def comprobarNombreUsuario(self, nomUsuario):
-        try:
-            sql = "SELECT nom_usu FROM empleados WHERE nom_usu = %s"
-            self.conectar()
-            self.cursor.execute(sql, nomUsuario)
-            rs = self.cursor.fetchone()
-            self.desconectar()
-            return rs
-        except Exception as e:
-            system("cls")
-            print(f"Error al comprobar el NOMBRE DE USUARIO del empleado (DAO): {e}")
-
-#----------------------------------------------------------------------------------------------
 # CREA EMPLEADO
     def insertarEmpleado(self, empleado):
         try:
+            # --- LÓGICA DE ENCRIPTACIÓN ---
+            contrasena_plana = empleado.getContrasena()
+            contrasena_encriptada = None
+
+            # Solo encriptamos si se proporcionó una contraseña (para empleados con acceso)
+            if contrasena_plana:
+                f = Fernet(self.__clave_fernet)
+                # La contraseña se convierte a bytes, se encripta, y luego se guarda como string para la BD.
+                contrasena_encriptada = f.encrypt(contrasena_plana.encode()).decode('utf-8')
+
+            # --- FIN LÓGICA DE ENCRIPTACIÓN ---
+
             sql = """INSERT INTO empleados (
                          rut_emp, nom_emp, app_emp, apm_emp, dir_emp, 
                          tel_emp, ema_emp, fec_nac_emp, fec_ini_emp, 
@@ -81,7 +78,7 @@ class dao:
                 empleado.getIdProyecto(),
                 empleado.getIdTipoAcc(),
                 empleado.getNombreUsuario(),
-                empleado.getContrasena()
+                contrasena_encriptada # Usamos la contraseña ya encriptada
             )
             self.conectar()
             self.cursor.execute(sql, valores)
@@ -91,19 +88,43 @@ class dao:
             system("cls")
             print(f"Error al insertar el empleado (DAO): {e}")
 
-    def Login(self, nomUsuario, contrasena):
+    def Login(self, nomUsuario, contrasena):     
         try:
-            sql = "SELECT nom_usu, con_usu FROM empleados WHERE nom_usu = %s AND con_usu = %s"
+            # 1. Buscar al usuario por su nombre de usuario (nom_usu)
+            sql = "SELECT * FROM empleados WHERE nom_usu = %s"
             self.conectar()
-            self.cursor.execute(sql, (nomUsuario, contrasena))
-            rs = self.cursor.fetcone()
+            self.cursor.execute(sql, (nomUsuario,))
+            rs = self.cursor.fetchone()
             self.desconectar()
 
+            # 2. Si no se encuentra el usuario, el login falla
             if rs is None:
                 return None
-            else:
-                pass
-    
-
-
             
+            # 3. Si se encuentra, desencriptar la contraseña de la BD y comparar
+            contrasena_bd_encriptada = rs[15]
+
+            if not contrasena_bd_encriptada: # Si no hay contraseña en la BD
+                return None
+            else:
+                f = Fernet(self.__clave_fernet)
+
+                try:
+                    contrasena_bd_desencriptada = f.decrypt(contrasena_bd_encriptada.encode()).decode()
+                except Exception:
+                    return None # Si no se puede desencriptar, el login falla
+
+                # 4. Comparar la contraseña desencriptada con la que ingresó el usuario
+                if contrasena_bd_desencriptada == contrasena:
+                    # ¡Éxito! Creamos y devolvemos el objeto empleado con sus datos
+                    emp = empleado()
+                    emp.setRut(rs[1])
+                    emp.setNombres(rs[2])
+                    emp.setIdTipoAcc(rs[13])
+                    emp.setNombreUsuario(rs[14])
+                    return emp
+                else:
+                    return None # La contraseña no coincide
+        except Exception as e:
+            system("cls")
+            print(f"Error al iniciar sesion (DAO): {e}")

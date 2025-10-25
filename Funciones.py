@@ -252,25 +252,32 @@ class funciones:
                     self.menuInicial()
                     return
                 elif op == 1:
-                    system("cls")
-                    rut_sin_formato = input("\nIngrese rut del nuevo empleado con digito verificador (SIN puntos y SIN guion): ").strip()
-                    if rut_sin_formato.isdigit() and (len(rut_sin_formato) <= 10 and len(rut_sin_formato) >= 8):                      
-                        cuerpo = rut_sin_formato[:-1]  # todos menos el último dígito
-                        dv = rut_sin_formato[-1]       # último dígito (dígito verificador)
-                        rut_formateado = (f"{cuerpo}-{dv}")
-                        if self.dao.comprobarRutEmpleado(rut_formateado) is not None:
-                            print(f"---ERROR, El rut ingresado ya existe!! {rut_formateado}", end="\n\n")
+                    try:
+                        system("cls")
+                        rut_sin_formato = input("\nIngrese rut del nuevo empleado con digito verificador (SIN puntos y SIN guion): ").strip()
+
+                        if rut_sin_formato.isdigit() and (len(rut_sin_formato) <= 10 and len(rut_sin_formato) >= 8): 
+
+                            cuerpo = rut_sin_formato[:-1]  # todos menos el último dígito
+                            dv = rut_sin_formato[-1]       # último dígito (dígito verificador)
+                            rut_formateado = (f"{cuerpo}-{dv}")
+
+                            if self.dao.comprobarRutEmpleado(rut_formateado) is not None:
+                                print(f"---ERROR, El rut ingresado ya existe!! {rut_formateado}", end="\n\n")
+                                system("pause")
+                                continue
+                            else:
+                                print("\nRut guardado correctamente:", rut_formateado)
+                                system("pause")
+                                break
+                        else:
+                            print("\nEl rut debe tener entre 8 y 10 digitos (sin puntos ni guion) y solo contener numeros")
                             system("pause")
                             continue
-                        else:
-                            print("\nRut guardado correctamente:", rut_formateado)
-                            system("pause")
-                            break
-                    else:
-                        print("\nEl rut debe tener entre 8 y 10 digitos (sin puntos ni guion) y solo contener numeros")
+                    except ValueError:
+                        print("\n¡ERROR! El rut debe ser escrito solo con numeros")
                         system("pause")
                         continue
-
             except ValueError:
                 print("\n¡ERROR! La opcion solo puede ser un numero entero positivo")
                 system("pause")
@@ -452,43 +459,27 @@ class funciones:
         # USUARIO Y CONTRASEÑA ---------------------------------------------------------------------------
         nomUsuario = None
         contrasena = None # Aquí se almacenará la contraseña en texto plano, el DAO debería encriptarla antes de guardar
-
+ 
         # Si el tipo de acceso es GERENTE (2) o GESTION DE PROYECTOS (1), se debe crear un usuario.
         if tipoAcceso == 1 or tipoAcceso == 2:
             system("cls")
             print("-----------------------------------------")
             print("--- CREAR EMPLEADO (USUARIO EMPLEADO) ---")
             print("-----------------------------------------")
-            print(f"\nEl tipo de acceso {tipoAcceso} requiere la creación de un usuario.")
+            print(f"\nEl tipo de acceso {tipoAcceso} requiere la creación de un usuario. Se generará automáticamente.")
             system("pause")
-
-            # Obtener y validar nombre de usuario
-            while True:
-                system("cls")
-                print("-----------------------------------------")
-                print("--- CREAR EMPLEADO (USUARIO EMPLEADO) ---")
-                print("-----------------------------------------")
-                nomUsuario_input = input("\nIngrese nombre de usuario (mín 3, máx 50 caracteres): ").strip()
-                if 3 <= len(nomUsuario_input) <= 50:
-                    if self.dao.comprobarNombreUsuario(nomUsuario_input) is None:
-                        nomUsuario = nomUsuario_input
-                        print(f"\nNombre de usuario '{nomUsuario}' guardado correctamente.")
-                        system("pause")
-                        break
-                    else:
-                        print("\nEl nombre de usuario ya existe. Intente con otro.")
-                        system("pause")
-                else:
-                    print("\nEl nombre de usuario debe tener entre 3 y 50 caracteres.")
-                    system("pause")
-
+ 
+            # Generar nombre de usuario automáticamente: inicial del nombre + rut formateado
+            nomUsuario = nombre[0].upper() + rut_formateado
+            print(f"\nNombre de usuario generado automáticamente: {nomUsuario}")
+            system("pause")
+ 
             # Obtener y validar contraseña
-            while True:
+            while True:            
                 system("cls")
                 print("--- CREAR EMPLEADO (USUARIO EMPLEADO) ---")
                 contrasena_input = input("\nIngrese contraseña para el empleado (mín 6, máx 255 caracteres): ").strip()
                 if 6 <= len(contrasena_input) <= 255:
-                    # TODO: Hashear la contraseña antes de almacenarla en la base de datos
                     contrasena = contrasena_input
                     print("\nContraseña guardada correctamente.")
                     system("pause")
@@ -518,6 +509,8 @@ class funciones:
         self.emp.setContrasena(contrasena)   # Asignar la contraseña recolectada (texto plano por ahora)
         
         self.dao.insertarEmpleado(self.emp)
+        print("\n¡Empleado creado exitosamente!")
+        system("pause")
 
 
     def __listarEmpleados(self):
