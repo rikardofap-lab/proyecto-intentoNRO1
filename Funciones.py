@@ -8,9 +8,6 @@ from os import system
 import os
 
 class funciones:
-    emp = empleado()
-    pro = proyecto()
-    tip = tipoAcceso()
     dao = dao()
 
     def __init__(self):
@@ -237,6 +234,9 @@ class funciones:
 #-------------------------------------------------------------------------------------------
 #   FUNCIONES MENU GERENTE
     def __crearEmpleado(self):
+        # Creamos una instancia LOCAL para este nuevo empleado.
+        nuevo_empleado = empleado()
+
         # RUT ------------------------------------------------------------------------------
         while True:
             try:
@@ -492,23 +492,23 @@ class funciones:
             system("pause")
 
         # Asignar los valores al objeto empleado (usando self.emp)
-        self.emp.setRut(rut_formateado)
-        self.emp.setNombres(nombre)
-        self.emp.setApellidoPaterno(app_paterno)
-        self.emp.setApellidoMaterno(app_materno)
-        self.emp.setDireccion(direccion)
-        self.emp.setNroTelefono(nroTelefono)
-        self.emp.setEmail(email)
-        self.emp.setFechaNacimiento(fecha_nacimiento.strftime('%Y-%m-%d'))
-        self.emp.setFechaInicioContrato(fecha_ini_contrato.strftime('%Y-%m-%d'))
-        self.emp.setSalario(salario)
-        self.emp.setIdEstado(1) # 1 significa 'HABILITADO' 
-        self.emp.setIdProyecto(None) # Por defecto, un nuevo empleado no tiene proyecto asignado
-        self.emp.setIdTipoAcc(tipoAcceso)
-        self.emp.setNombreUsuario(nomUsuario) # Asignar el nombre de usuario recolectado
-        self.emp.setContrasena(contrasena)   # Asignar la contraseña recolectada (texto plano por ahora)
+        nuevo_empleado.setRut(rut_formateado)
+        nuevo_empleado.setNombres(nombre)
+        nuevo_empleado.setApellidoPaterno(app_paterno)
+        nuevo_empleado.setApellidoMaterno(app_materno)
+        nuevo_empleado.setDireccion(direccion)
+        nuevo_empleado.setNroTelefono(nroTelefono)
+        nuevo_empleado.setEmail(email)
+        nuevo_empleado.setFechaNacimiento(fecha_nacimiento.strftime('%Y-%m-%d'))
+        nuevo_empleado.setFechaInicioContrato(fecha_ini_contrato.strftime('%Y-%m-%d'))
+        nuevo_empleado.setSalario(salario)
+        nuevo_empleado.setIdEstado(1) # 1 significa 'HABILITADO'
+        nuevo_empleado.setIdProyecto(None) # Por defecto, un nuevo empleado no tiene proyecto asignado
+        nuevo_empleado.setIdTipoAcc(tipoAcceso)
+        nuevo_empleado.setNombreUsuario(nomUsuario) # Asignar el nombre de usuario recolectado
+        nuevo_empleado.setContrasena(contrasena)   # Asignar la contraseña recolectada (texto plano por ahora)
         
-        self.dao.insertarEmpleado(self.emp)
+        self.dao.insertarEmpleado(nuevo_empleado)
         print("\n¡Empleado creado exitosamente!")
         system("pause")
 

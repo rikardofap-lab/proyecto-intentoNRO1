@@ -101,30 +101,31 @@ class dao:
             if rs is None:
                 return None
             
-            # 3. Si se encuentra, desencriptar la contraseña de la BD y comparar
-            contrasena_bd_encriptada = rs[15]
-
-            if not contrasena_bd_encriptada: # Si no hay contraseña en la BD
-                return None
             else:
-                f = Fernet(self.__clave_fernet)
+                # 3. Si se encuentra, desencriptar la contraseña de la BD y comparar
+                contrasena_bd_encriptada = rs[15]
 
-                try:
-                    contrasena_bd_desencriptada = f.decrypt(contrasena_bd_encriptada.encode()).decode()
-                except Exception:
-                    return None # Si no se puede desencriptar, el login falla
-
-                # 4. Comparar la contraseña desencriptada con la que ingresó el usuario
-                if contrasena_bd_desencriptada == contrasena:
-                    # ¡Éxito! Creamos y devolvemos el objeto empleado con sus datos
-                    emp = empleado()
-                    emp.setRut(rs[1])
-                    emp.setNombres(rs[2])
-                    emp.setIdTipoAcc(rs[13])
-                    emp.setNombreUsuario(rs[14])
-                    return emp
+                if not contrasena_bd_encriptada: # Si no hay contraseña en la BD
+                    return None
                 else:
-                    return None # La contraseña no coincide
+                    f = Fernet(self.__clave_fernet)
+
+                    try:
+                        contrasena_bd_desencriptada = f.decrypt(contrasena_bd_encriptada.encode()).decode()
+                    except Exception:
+                        return None # Si no se puede desencriptar, el login falla
+
+                    # 4. Comparar la contraseña desencriptada con la que ingresó el usuario
+                    if contrasena_bd_desencriptada == contrasena:
+                        # ¡Éxito! Creamos y devolvemos el objeto empleado con sus datos
+                        emp = empleado()
+                        emp.setRut(rs[1])
+                        emp.setNombres(rs[2])
+                        emp.setIdTipoAcc(rs[13])
+                        emp.setNombreUsuario(rs[14])
+                        return emp
+                    else:
+                        return None # La contraseña no coincide
         except Exception as e:
             system("cls")
             print(f"Error al iniciar sesion (DAO): {e}")
