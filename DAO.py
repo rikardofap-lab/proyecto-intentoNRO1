@@ -129,3 +129,21 @@ class dao:
         except Exception as e:
             system("cls")
             print(f"Error al iniciar sesion (DAO): {e}")
+#----------------------------------------------------------------------------------------------
+# OBTENER EMPLEADO (PARA LISTAR)
+    def ObtenerEmpleado(self):
+        try:
+            sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, tel_emp, ema_emp, sal_emp, nom_est, id_pro 
+                FROM empleados e 
+                INNER JOIN estados est 
+                ON e.id_est = est.id_est 
+                ORDER BY nom_emp ASC"""
+            self.conectar()
+            self.cursor.execute(sql,)
+            rs = self.cursor.fetchall()
+            self.desconectar()
+            return rs
+                
+        except Exception as e:
+            system("cls")
+            print(f"Error al obtener el empleado (DAO): {e}")

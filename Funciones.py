@@ -514,7 +514,30 @@ class funciones:
 
 
     def __listarEmpleados(self):
-        pass
+        try:
+            respuesta = self.dao.ObtenerEmpleado() 
+            if len(respuesta)== 0:
+                print("No hay empleados registrados.")
+                system("pause")
+                self.__menuGerente()
+                return
+            else:
+                system("cls")
+                print("----------------------------------")
+                print("--------(LISTAR EMPLEADOS)--------")
+                print("----------------------------------")
+                tabla = PrettyTable()
+                tabla.field_names = ["RUT", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "TELEFONO", "EMAIL", "SALARIO", "ESTADO", "ID PROYECTO"]
+                for x in respuesta:
+                    tabla.add_row(x)
+                print(tabla, end="\n\n")
+                system("pause")
+                self.__menuGerente()
+        except Exception as e:
+            print(f"\n¡ERROR! Al listar los empleados: {e}", end="\n\n")
+            system("pause")
+            self.__menuGerente()
+
 
     def __buscarEmpleado(self):
         pass
