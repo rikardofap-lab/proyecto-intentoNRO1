@@ -333,7 +333,7 @@ class funciones:
                     system("pause")
                     break
                 else:
-                    print("\nERROR: El número debe tener exactamente 8 dígitos y solo contener números.")
+                    print("\nERROR: El número debe tener exactamente 9 dígitos y solo contener números.")
                     system("pause")
                     continue
 
@@ -395,7 +395,7 @@ class funciones:
                     system("pause")
                     break
                 else:
-                    print("\nEl salario debe ser mayor a $549.999")
+                    print("\nEl salario debe ser mayor a $549.999 y menor a $4.000.000")
                     system("pause")
                     continue
             except ValueError:
@@ -502,7 +502,7 @@ class funciones:
             else:
                 system("cls")
                 print("----------------------------------")
-                print("--------(LISTAR EMPLEADOS)--------")
+                print("-------- LISTAR EMPLEADOS --------")
                 print("----------------------------------")
                 tabla = PrettyTable()
                 tabla.field_names = ["RUT", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "TELEFONO", "EMAIL", "SALARIO", "ESTADO", "ID PROYECTO"]
@@ -528,9 +528,9 @@ class funciones:
                     
                 else:
                     system("cls")
-                    print("-----------------------------------------")
-                    print(f"---------- (BUSCAR EMPLEADO) ------------")
-                    print("-----------------------------------------")
+                    print("----------------------------------------")
+                    print(f"---------- BUSCAR EMPLEADO ------------")
+                    print("----------------------------------------")
                     print(f"\n---EMPLEADO ENCONTRADO---")
                     print(F"RUT:                   {emp.getRut()}")
                     print(F"NOMBRE:                {emp.getNombres()}")
@@ -555,7 +555,175 @@ class funciones:
         
 
     def __modificarEmpleado(self):
-        pass
+        try:
+            system("cls")
+            print("---------------------------------------")
+            print("---------- MODIFICAR EMPLEADO ---------")
+            print("---------------------------------------")
+            rut = self.__obtener_rut_validado(titulo_menu ="MODIFICAR EMPLEADO (RUT)")
+            emp = self.dao.BuscarEmpleado(rut)
+            if emp is None:
+                print("---ERROR! El empleado que quiere modificar no existe! Verifique el rut ingresado---", end="\n\n")
+                system("pause")
+                self.__menuGerente()
+            else:
+                system("cls")
+                print("-----------------------------------------")
+                print("---------- (MODIFICAR EMPLEADO) ---------")
+                print("-----------------------------------------")
+                print(f"\n---EMPLEADO ENCONTRADO---")
+                print(F"RUT:                   {emp.getRut()}")
+                print(F"NOMBRE:--------------> {emp.getNombres()}")
+                print(F"APELLIDO PATERNO: ---> {emp.getApellidoPaterno()}")
+                print(F"DIRECCION: ----------> {emp.getDireccion()}")
+                print(F"TELEFONO: -----------> {emp.getNroTelefono()}")
+                print(F"EMAIL: --------------> {emp.getEmail()}")
+                print(F"SALARIO: ------------> {emp.getSalario()}")
+                print(F"ESTADO:--------------> {emp.getIdEstado()}")
+                print(F"ID PROYECTO:---------> {emp.getIdProyecto()}", end="\n\n")
+
+                print("1- MODIFICAR NOMBRE")
+                print("2- MODIFICAR DIRECCION")
+                print("3- MODIFICAR TELEFONO")
+                print("4- MODIFICAR EMAIL")
+                print("5- MODIFICAR SALARIO")
+                print("6- MODIFICAR ESTADO")
+                print("7- MODIFICAR ID PROYECTO")
+                print("8- VOLVER")
+                dato = int(input("\nElija que dato quiere modificar con el numero correspondiente (1-8): "))
+                if 1 <= dato <= 8:
+                    if dato == 1:
+                        nuevo = self.__obtener_apellido("MODIFICAR EMPLEADO (NOMBRE)")
+                        self.dao.modificarEmpleado(dato, nuevo, rut)
+
+                    elif dato == 2:
+                        while True:
+                            print("----------------------------------------")
+                            print("---- MODIFICAR EMPLEADO (DIRECCION) ----")
+                            print("----------------------------------------")
+                            nueva_direccion = input("\nIngrese la nueva direccion del empleado: ")
+                            if len(nueva_direccion.strip()) >= 10 and len(nueva_direccion.strip()) <= 60:
+                                nuevo = nueva_direccion.capitalize()
+                                print("\nDirección guardada correctamente:", nuevo)
+                                system("pause")
+                                break
+                            else:
+                                print("\nLa direccion debe tener entre 10 y 60 caracteres")
+                                system("pause")
+                                continue
+                        self.dao.modificarEmpleado(dato, nuevo, rut)
+                    elif dato == 3:
+                        while True:
+                            print("---------------------------------------")
+                            print("---- MODIFICAR EMPLEADO (TELEFONO) ----")
+                            print("---------------------------------------")
+                            try:
+                                nroTelefono = input("\nIngrese el nuevo número de teléfono del empleado (9 dígitos) (SIN +56): ")
+
+                                if nroTelefono.isdigit() and len(nroTelefono) == 9:
+                                    nuevo = "+56" + nroTelefono
+                                    print("\nNúmero guardado correctamente:", nuevo)
+                                    system("pause")
+                                    break
+                                else:
+                                    print("\nERROR: El número debe tener exactamente 9 dígitos y solo contener números.")
+                                    system("pause")
+                                    continue
+                            except ValueError:
+                                print("ERROR! El numero de telefono debe ser escrito solo con numeros")
+                                system("pause")
+                                continue
+                        self.dao.modificarEmpleado(dato, nuevo, rut)
+                    elif dato == 4:
+                        while True:
+                            print("----------------------------------------")
+                            print("------ MODIFICAR EMPLEADO (EMAIL) ------")
+                            print("----------------------------------------")
+                            nuevo = input("\nIngrese el nuevo email del empleado: ")
+                            if len(nuevo.strip()) >= 10 and len(nuevo.strip()) <= 60:
+                                print("\nEmail guardado correctamente:", nuevo)
+                                system("pause")
+                                break
+                            else:
+                                print("\nEl email debe tener entre 10 y 60 caracteres")
+                                system("pause")
+                                continue
+                        self.dao.modificarEmpleado(dato, nuevo, rut)
+                    elif dato == 5:
+                        while True:
+                            print("--------------------------------------")
+                            print("---- MODIFICAR EMPLEADO (SALARIO) ----")
+                            print("--------------------------------------")
+                            try:             
+                                nuevo = int(input("\nIngrese el nuevo salario del empleado: "))
+                                if nuevo > 549_999 and nuevo < 4_000_000:
+                                    print("\nSalario guardado correctamente:", nuevo)
+                                    system("pause")
+                                    break
+                                else:
+                                    print("\nEl salario debe ser mayor a $549.999 y menor a $4.000.000")
+                                    system("pause")
+                                    continue
+                            except ValueError:
+                                print("\n¡ERROR! El salario debe ser escrito solo con numeros")
+                                system("pause")
+                                continue
+
+                            except Exception as e:
+                                print(f"\n¡ERROR! Al ingresar el salario del empleado: {e}", end="\n\n")
+                                system("pause")
+                                continue
+                        self.dao.modificarEmpleado(dato, nuevo, rut)
+
+                    elif dato == 6:
+                                        
+                        if emp.getIdEstado() == 'HABILITADO':
+                            nuevo = 2
+                            system("cls")
+                            print(f"\nSe ha cambiado el estado del empleado: {emp.getNombres()} {emp.getApellidoPaterno()} a DESHABILITADO", end="\n\n")
+                            system("pause")
+                            self.dao.modificarEmpleado(dato, nuevo, rut)
+
+                        elif emp.getIdEstado() == 'DESHABILITADO':
+                            nuevo = 1
+                            system("cls")
+                            print(f"\nSe ha cambiado el estado del empleado: {emp.getNombres()} {emp.getApellidoPaterno()} a HABILITADO", end="\n\n")
+                            system("pause")
+                            self.dao.modificarEmpleado(dato, nuevo, rut)
+
+                        else: # <--- BUENA PRÁCTICA
+                            print(f"ERROR: El empleado tiene un estado desconocido ({emp.getIdEstado()}). No se realizaron cambios.")
+                            system("pause")
+                            self.__menuGerente()
+
+                    elif dato == 7:
+                        pass
+#----------------------------------                                                       --------------------------------------------------------------
+#---------------------------------- AQUI TENGO QUE LISTAR LOS PROYECTOS EXISTENTES Y      --------------------------------------------------------------
+#---------------------------------- PREGUNTAR A QUE PROYECTO QUIERO MOVER AL EMPLEADO     --------------------------------------------------------------
+#---------------------------------- ESA VARIABLE SERA A LA QUE VOY A CAMBIAR EL EMPLEADO  --------------------------------------------------------------
+#---------------------------------- LA VALIDO Y LA ENVIO AL DAO PARA QUE CAMBIE EL id_pro --------------------------------------------------------------
+#----------------------------------                                                       --------------------------------------------------------------
+
+                    else:
+                        print("\nVolviendo al menú GERENTE...", end="\n\n")
+                        system("pause")
+                        self.__menuGerente()
+                else:
+                    print("\n--- Error De Opcion De Menú Modificar Empleado Debe Ser Del 1 al 8!! ---", end="\n\n")
+                    system("pause")
+                    self.__menuGerente()
+        except ValueError:
+            print("\n---ERROR!! La opcion solo puede ser un numero entero positivo---", end="\n\n")
+            system("pause")
+            self.__menuGerente()
+
+        except Exception as e:
+            print(f"\n¡ERROR! Al modificar el empleado: {e}", end="\n\n")
+            system("pause")
+            self.__menuGerente()
+
+
 
     def __eliminarEmpleado(self):
         pass
@@ -603,7 +771,7 @@ class funciones:
 #---------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------
 
-    def __obtener_rut_validado(titulo_menu: str):
+    def __obtener_rut_validado(self,titulo_menu: str):
         """
         Pide un RUT al usuario, lo valida (formato y dígito 'K') 
         y lo retorna formateado (ej: "12345678-K").
@@ -638,7 +806,7 @@ class funciones:
                 continue
 
     #---------------------------------------------------------------------------------------------------------
-    def __obtener_fecha(titulo_pantalla: str) -> date:
+    def __obtener_fecha(self,titulo_pantalla: str) -> date:
         """
         Solicita al usuario una fecha (día, mes, año), la valida y la devuelve.
         Repite el proceso hasta que se ingrese una fecha válida.
@@ -671,7 +839,7 @@ class funciones:
                 continue
     #---------------------------------------------------------------------------------------------------------
 
-    def __obtener_apellido(titulo_pantalla: str) -> str:
+    def __obtener_apellido(self, titulo_pantalla: str) -> str:
         while True:
                 try:
                     system("cls")

@@ -187,3 +187,28 @@ class dao:
             print(f"Error al buscar el empleado (DAO): {e}")
 #----------------------------------------------------------------------------------------------
 # BUSCAR EMPLEADOS ESXISTENTES (HABILITADOS)
+    def modificarEmpleado(self, dato, nuevo, rut):
+        try:
+            sql = ""
+            if dato == 1:
+                sql = "UPDATE empleados SET nom_emp = %s WHERE rut_emp = %s"
+            elif dato == 2:
+                sql = "UPDATE empleados SET dir_emp = %s WHERE rut_emp = %s"
+            elif dato == 3:
+                sql = "UPDATE empleados SET tel_emp = %s WHERE rut_emp = %s"
+            elif dato == 4:
+                sql = "UPDATE empleados SET ema_emp = %s WHERE rut_emp = %s"
+            elif dato == 5:
+                sql = "UPDATE empleados SET sal_emp = %s WHERE rut_emp = %s"
+            elif dato == 6:
+                sql = "UPDATE empleados SET id_est = %s WHERE rut_emp = %s"
+            elif dato == 7:
+                sql = "UPDATE empleados SET id_pro = %s WHERE rut_emp = %s"
+            self.conectar()
+            val = (nuevo, rut)
+            self.cursor.execute(sql, val)
+            self.con.commit()
+            self.desconectar()
+        except Exception as e:
+            system("cls")
+            print(f"Error al modificar el empleado (DAO): {e}")
