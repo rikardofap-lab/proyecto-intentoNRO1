@@ -6,7 +6,6 @@ class empleado(persona):
     __salario = 0
     __idEmpleado = 0 
     __idEstado = 0
-    __nomEstado = ""
     __idTipoAcc = 0
     __idProyecto = None  # Corresponde a id_pro en la BD (puede ser NULL)
     __nombreUsuario = None
@@ -49,14 +48,6 @@ class empleado(persona):
     def setIdEstado(self, idEstado):
         self.__idEstado = idEstado
     
-#------------------------------------------------------------
-#   NOMBRE ESTADO 
-    def getNombreEstado(self):
-        return self.__nomEstado
-    
-    def setNombreEstado(self, nombreEstado):
-        self.__nomEstado = nombreEstado
-
 #------------------------------------------------------------
 #   ID TIPO DE ACCESO (INT)
     def getIdTipoAcc(self):

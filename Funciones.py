@@ -252,41 +252,19 @@ class funciones:
                     self.menuInicial()
                     return
                 elif op == 1:
-                    try:
-                        system("cls")
-                        rut_sin_formato = input("\nIngrese rut del nuevo empleado con digito verificador (SIN puntos y SIN guion): ").strip()
-
-                        if rut_sin_formato.isdigit() and (len(rut_sin_formato) <= 10 and len(rut_sin_formato) >= 8): 
-
-                            cuerpo = rut_sin_formato[:-1]  # todos menos el último dígito
-                            dv = rut_sin_formato[-1]       # último dígito (dígito verificador)
-                            rut_formateado = (f"{cuerpo}-{dv}")
-
-                            if self.dao.comprobarRutEmpleado(rut_formateado) is not None:
-                                print(f"---ERROR, El rut ingresado ya existe!! {rut_formateado}", end="\n\n")
-                                system("pause")
-                                continue
-                            else:
-                                print("\nRut guardado correctamente:", rut_formateado)
-                                system("pause")
-                                break
-                        else:
-                            print("\nEl rut debe tener entre 8 y 10 digitos (sin puntos ni guion) y solo contener numeros")
-                            system("pause")
-                            continue
-                    except ValueError:
-                        print("\n¡ERROR! El rut debe ser escrito solo con numeros")
+                    system("cls")
+                    rut_formateado = self.__obtener_rut_validado(titulo_menu="CREAR EMPLEADO (RUT)")
+                    if self.dao.comprobarRutEmpleado(rut_formateado) is not None:
+                        print(f"\n---ERROR! El rut {rut_formateado} ya está registrado en la base de datos---", end="\n\n")
                         system("pause")
                         continue
-            except ValueError:
-                print("\n¡ERROR! La opcion solo puede ser un numero entero positivo")
-                system("pause")
-                continue
-
+                    else:
+                        print(f"RUT {rut_formateado} registrado correctamente", end="\n\n")
+                        system("pause")
+                        break                  
             except Exception as e:
                 print(f"\n¡ERROR! Al ingresar el rut del empleado: {e}", end="\n\n")
-                system("pause")
-                continue
+
         # NOMBRE ---------------------------------------------------------------------------
         while True:
             try:
@@ -310,11 +288,11 @@ class funciones:
                 continue
 
         # APELLIDO PATERNO ------------------------------------------------------------------
-        app_paterno = obtener_apellido("Apellido Paterno")
+        app_paterno = self.__obtener_apellido("Apellido Paterno")
 
 
         # APELLIDO MATERNO ------------------------------------------------------------------
-        app_materno = obtener_apellido("Apellido Materno")
+        app_materno = self.__obtener_apellido("Apellido Materno")
  
 
         # DIRECCION ------------------------------------------------------------------------
@@ -392,7 +370,7 @@ class funciones:
 
         # Obtener fecha de nacimiento con la funcion obtener_fecha(titulo_pantalla: str) -> date     
         system("cls")
-        fecha_nacimiento = obtener_fecha("CREAR EMPLEADO (FECHA NACIMIENTO)")
+        fecha_nacimiento = self.__obtener_fecha("CREAR EMPLEADO (FECHA NACIMIENTO)")
         print(f"\nFecha de nacimiento registrada: {fecha_nacimiento.strftime('%Y-%m-%d')}")
         system("pause")
 
@@ -400,7 +378,7 @@ class funciones:
 
         # Obtener fecha de inicio de contrato con la funcion obtener_fecha(titulo_pantalla: str) -> date 
         system("cls")
-        fecha_ini_contrato = obtener_fecha("CREAR EMPLEADO (FECHA INICIO CONTRATO)")
+        fecha_ini_contrato = self.__obtener_fecha("CREAR EMPLEADO (FECHA INICIO CONTRATO)")
         print(f"\nFecha de inicio de contrato registrada: {fecha_ini_contrato.strftime('%Y-%m-%d')}")
         system("pause")
 
@@ -538,9 +516,43 @@ class funciones:
             system("pause")
             self.__menuGerente()
 
-
     def __buscarEmpleado(self):
-        pass
+            try:
+                rut = self.__obtener_rut_validado(titulo_menu="BUSCAR EMPLEADO (RUT)")
+                emp = self.dao.BuscarEmpleado(rut)
+                
+                if emp is None:
+                    print(f"El rut {rut} no corresponde a un empleado registrado en la base de datos", end="\n\n")
+                    system("pause")
+                    self.__menuGerente()
+                    
+                else:
+                    system("cls")
+                    print("-----------------------------------------")
+                    print(f"---------- (BUSCAR EMPLEADO) ------------")
+                    print("-----------------------------------------")
+                    print(f"\n---EMPLEADO ENCONTRADO---")
+                    print(F"RUT:                   {emp.getRut()}")
+                    print(F"NOMBRE:                {emp.getNombres()}")
+                    print(F"APELLIDO PATERNO:      {emp.getApellidoPaterno()}")
+                    print(F"APELLIDO MATERNO:      {emp.getApellidoMaterno()}")
+                    print(F"DIRECCION:             {emp.getDireccion()}")
+                    print(F"TELEFONO:              {emp.getNroTelefono()}")
+                    print(F"EMAIL:                 {emp.getEmail()}")
+                    print(F"FECHA NACIMIENTO:      {emp.getFechaNacimiento()}")
+                    print(F"FECHA INICIO CONTRATO: {emp.getfechaInicioContrato()}")
+                    print(F"SALARIO:               {emp.getSalario()}")
+                    print(F"ESTADO:--------------> {emp.getIdEstado()}")
+                    print(F"ID PROYECTO:---------> {emp.getIdProyecto()}")
+                    print(F"TIPO ACCESO:---------> {emp.getIdTipoAcc()}", end="\n\n")
+                    system("pause")
+                    self.__menuGerente()
+
+            except Exception as e:
+                print(f"\n¡ERROR! Al buscar el empleado: {e}", end="\n\n")
+                system("pause")
+                self.__menuGerente()
+        
 
     def __modificarEmpleado(self):
         pass
@@ -591,64 +603,98 @@ class funciones:
 #---------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------
 
-def obtener_fecha(titulo_pantalla: str) -> date:
-    """
-    Solicita al usuario una fecha (día, mes, año), la valida y la devuelve.
-    Repite el proceso hasta que se ingrese una fecha válida.
-
-    Args:
-        titulo_pantalla (str): El título que se mostrará en la pantalla de ingreso.
-
-    Returns:
-        date: El objeto de fecha validado.
-    """
-    while True:
-        try:
+    def __obtener_rut_validado(titulo_menu: str):
+        """
+        Pide un RUT al usuario, lo valida (formato y dígito 'K') 
+        y lo retorna formateado (ej: "12345678-K").
+        Este bucle se repite hasta que el RUT ingresado sea válido.
+        """
+        while True:
             system("cls")
             print("-----------------------------------------")
-            print(f"--- {titulo_pantalla.upper()} ---")
+            print(f"---------- {titulo_menu} ----------")
             print("-----------------------------------------")
+            
+            # 1. Pedir y limpiar (acepta "11 111 111 k")
+            rut_sin_formato = input("\nIngrese RUT (SIN puntos y SIN guion) puede usar espacios para separar digitos (Ej: 11 111 111 k): ").strip().replace(" ", "")
 
-            print("\nIngrese la fecha:")
-            dia = int(input("Día (DD): "))
-            mes = int(input("Mes (MM): "))
-            anio = int(input("Año (AAAA): "))
-
-            # Validar y construir la fecha
-            fecha_validada = date(anio, mes, dia)
-            return fecha_validada # Si la fecha es válida, la retornamos y salimos de la función
-
-        except ValueError:
-            print("\nError: Fecha inválida. Verifique los valores ingresados.")
-            system("pause")
-            continue
-#---------------------------------------------------------------------------------------------------------
-
-def obtener_apellido(titulo_pantalla: str) -> str:
-    while True:
-            try:
-                system("cls")
-                print("-------------------------------------------")
-                print(f"---- {titulo_pantalla.upper()} ----")
-                print("-------------------------------------------")
-
-                appellido_ingresado = input(f"\nIngrese {titulo_pantalla.lower()}  del empleado: ").strip()
-                if appellido_ingresado.isalpha() and len(appellido_ingresado) >= 2 and len(appellido_ingresado) <= 20:
-                    ape_formateado = appellido_ingresado.capitalize()
-                    print(f"\n{titulo_pantalla.lower()} guardado correctamente:",ape_formateado )
-                    system("pause")
-                    return ape_formateado
-                else:
-                    print("\nEl apellido debe tener entre 2 y 20 caracteres")
+            # 2. Validar longitud
+            if (8 <= len(rut_sin_formato) <= 10):
+                    # 3. Separar cuerpo y DV
+                    cuerpo = rut_sin_formato[:-1]
+                    dv = rut_sin_formato[-1].upper() # Convertir 'k' a 'K'
+            else:
+                    print("\nError: El RUT debe tener entre 8 y 10 caracteres.")
                     system("pause")
                     continue
-            except Exception as e:
-                print(f"\n¡ERROR! Al ingresar el apellido del empleado: {e}", end="\n\n")
+
+            if cuerpo.isdigit() and (dv.isdigit() or dv == 'K'):
+                rut_formateado = f"{cuerpo}-{dv}"
+                return rut_formateado
+            else:
+                print("\nError: El RUT contiene caracteres no válidos.")
+                print("(Recuerde: solo números y 'k' al final si corresponde)")
                 system("pause")
                 continue
 
-            #---------------------------------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------------------------------------
+    def __obtener_fecha(titulo_pantalla: str) -> date:
+        """
+        Solicita al usuario una fecha (día, mes, año), la valida y la devuelve.
+        Repite el proceso hasta que se ingrese una fecha válida.
 
+        Args:
+            titulo_pantalla (str): El título que se mostrará en la pantalla de ingreso.
+
+        Returns:
+            date: El objeto de fecha validado.
+        """
+        while True:
+            try:
+                system("cls")
+                print("-----------------------------------------")
+                print(f"--- {titulo_pantalla.upper()} ---")
+                print("-----------------------------------------")
+
+                print("\nIngrese la fecha:")
+                dia = int(input("Día (DD): "))
+                mes = int(input("Mes (MM): "))
+                anio = int(input("Año (AAAA): "))
+
+                # Validar y construir la fecha
+                fecha_validada = date(anio, mes, dia)
+                return fecha_validada # Si la fecha es válida, la retornamos y salimos de la función
+
+            except ValueError:
+                print("\nError: Fecha inválida. Verifique los valores ingresados.")
+                system("pause")
+                continue
+    #---------------------------------------------------------------------------------------------------------
+
+    def __obtener_apellido(titulo_pantalla: str) -> str:
+        while True:
+                try:
+                    system("cls")
+                    print("-------------------------------------------")
+                    print(f"---- {titulo_pantalla.upper()} ----")
+                    print("-------------------------------------------")
+
+                    appellido_ingresado = input(f"\nIngrese {titulo_pantalla.lower()}  del empleado: ").strip()
+                    if appellido_ingresado.isalpha() and len(appellido_ingresado) >= 2 and len(appellido_ingresado) <= 20:
+                        ape_formateado = appellido_ingresado.capitalize()
+                        print(f"\n{titulo_pantalla.lower()} guardado correctamente:",ape_formateado )
+                        system("pause")
+                        return ape_formateado
+                    else:
+                        print("\nEl apellido debe tener entre 2 y 20 caracteres")
+                        system("pause")
+                        continue
+                except Exception as e:
+                    print(f"\n¡ERROR! Al ingresar el apellido del empleado: {e}", end="\n\n")
+                    system("pause")
+                    continue
+
+#---------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------

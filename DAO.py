@@ -130,15 +130,15 @@ class dao:
             system("cls")
             print(f"Error al iniciar sesion (DAO): {e}")
 #----------------------------------------------------------------------------------------------
-# OBTENER EMPLEADO (PARA LISTAR)
+# OBTENER EMPLEADOS (PARA LISTAR)
     def ObtenerEmpleado(self):
         try:
+            self.conectar()
             sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, tel_emp, ema_emp, sal_emp, nom_est, id_pro 
                 FROM empleados e 
                 INNER JOIN estados est 
                 ON e.id_est = est.id_est 
                 ORDER BY nom_emp ASC"""
-            self.conectar()
             self.cursor.execute(sql,)
             rs = self.cursor.fetchall()
             self.desconectar()
@@ -147,3 +147,43 @@ class dao:
         except Exception as e:
             system("cls")
             print(f"Error al obtener el empleado (DAO): {e}")
+#----------------------------------------------------------------------------------------------
+# BUSCAR EMPLEADO   
+    def BuscarEmpleado(self, rut):
+        try:
+            self.conectar()
+            sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, dir_emp, tel_emp, ema_emp, fec_nac_emp, fec_ini_emp, sal_emp, nom_est, id_pro, nom_tip_acc 
+                FROM empleados e 
+                INNER JOIN estados est 
+                ON e.id_est=est.id_est
+                INNER JOIN tipo_acceso tip_acc 
+                ON e.id_tip_acc=tip_acc.id_tip_acc
+                WHERE rut_emp =%s
+                AND e.id_est = 1
+                ORDER BY nom_emp ASC"""
+            self.cursor.execute(sql, (rut,))
+            rs = self.cursor.fetchone()
+            self.desconectar()
+            if rs is None:
+                return None
+            else:
+                emp = empleado()
+                emp.setRut(rs[0])
+                emp.setNombres(rs[1])
+                emp.setApellidoPaterno(rs[2])
+                emp.setApellidoMaterno(rs[3])
+                emp.setDireccion(rs[4])
+                emp.setNroTelefono(rs[5])
+                emp.setEmail(rs[6])
+                emp.setFechaNacimiento(rs[7])
+                emp.setFechaInicioContrato(rs[8])
+                emp.setSalario(rs[9])
+                emp.setIdEstado(rs[10])
+                emp.setIdProyecto(rs[11])
+                emp.setIdTipoAcc(rs[12])
+                return emp
+        except Exception as e:
+            system("cls")
+            print(f"Error al buscar el empleado (DAO): {e}")
+#----------------------------------------------------------------------------------------------
+# BUSCAR EMPLEADOS ESXISTENTES (HABILITADOS)
