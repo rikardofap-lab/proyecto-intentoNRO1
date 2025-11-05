@@ -212,3 +212,16 @@ class dao:
         except Exception as e:
             system("cls")
             print(f"Error al modificar el empleado (DAO): {e}")
+
+    def eliminarEmpleado(self, rut):
+        try:
+            sql = "UPDATE empleados SET id_est = 2 WHERE rut_emp = %s"
+            self.conectar()
+            self.cursor.execute(sql, (rut,))
+            self.con.commit()
+            self.desconectar()
+            return True
+        except Exception as e:
+            system("cls")
+            print(f"Error al eliminar el empleado (DAO): {e}")
+            return False

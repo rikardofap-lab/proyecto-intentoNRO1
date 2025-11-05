@@ -490,7 +490,6 @@ class funciones:
         print("\n¡Empleado creado exitosamente!")
         system("pause")
 
-
     def __listarEmpleados(self):
         try:
             respuesta = self.dao.ObtenerEmpleado() 
@@ -553,7 +552,6 @@ class funciones:
                 system("pause")
                 self.__menuGerente()
         
-
     def __modificarEmpleado(self):
         try:
             system("cls")
@@ -723,11 +721,53 @@ class funciones:
             system("pause")
             self.__menuGerente()
 
-
-
     def __eliminarEmpleado(self):
-        pass
-
+        while True:
+            try:
+                system("cls")
+                print("------------------------------------------")
+                print(f"---------- ELIMINAR EMPLEADO ------------")
+                print("------------------------------------------")
+                rut = self.__obtener_rut_validado(titulo_menu="ELIMINAR EMPLEADO (RUT)")
+                emp = self.dao.BuscarEmpleado(rut)
+                if emp is None:
+                    print("---ERROR! El empleado que quiere eliminar no existe o ya ha sido desvinculado! Verifique el rut ingresado---", end="\n\n")
+                    op = int(input("¿Desea volver a intentar con otro RUT o volver al menu Gerente? \n1- Intentar con otro RUT \n2- Volver\nDigite una opción: "))
+                    if op == 1:
+                        continue
+                    elif op == 2:
+                        self.__menuGerente()
+                        return
+                    else:
+                        print("\n--- Error De Opcion De Menú Eliminar Empleado Debe Ser Del 1 al 2!! Volviendo al menu Eliminar Emlpeado---", end="\n\n")
+                        system("pause")
+                        continue                                    
+                else:
+                    opcion = int(input(f"\nEstá seguro de desvincular a {emp.getNombres()} {emp.getApellidoPaterno()} RUT: {emp.getRut()} ? \n1- Si \n2- No \nDigite una opción: "))
+                    system("cls")
+                    if opcion == 1:
+                        if self.dao.eliminarEmpleado(rut):
+                            print(f"\nSe ha desvinculado al empleado: {emp.getNombres()} {emp.getApellidoPaterno()} RUT: {emp.getRut()}", end="\n\n")                       
+                            system("pause")
+                            self.__menuGerente()
+                            return
+                        else:
+                            print("\n¡ERROR! La base de datos no pudo procesar la desvinculación.")
+                            print("Volviendo al menu Gerente...", end="\n\n")
+                            system("pause")
+                            self.__menuGerente()
+                            return
+                    elif opcion == 2:
+                        continue
+                    else:
+                        print("Error de opción. Volviendo al menu Eliminar Empleado...", end="\n\n")
+                        system("pause")
+                        continue
+            except Exception as e:
+                print(f"\n¡ERROR! Al eliminar el empleado: {e}", end="\n\n")
+                system("pause")
+                continue
+        
     def __estadisticasEmpleados(self):
         pass
 
@@ -779,9 +819,9 @@ class funciones:
         """
         while True:
             system("cls")
-            print("-----------------------------------------")
-            print(f"---------- {titulo_menu} ----------")
-            print("-----------------------------------------")
+            print("-------------------------------------------")
+            print(f"--------- {titulo_menu} ---------")
+            print("-------------------------------------------")
             
             # 1. Pedir y limpiar (acepta "11 111 111 k")
             rut_sin_formato = input("\nIngrese RUT (SIN puntos y SIN guion) puede usar espacios para separar digitos (Ej: 11 111 111 k): ").strip().replace(" ", "")
@@ -820,9 +860,9 @@ class funciones:
         while True:
             try:
                 system("cls")
-                print("-----------------------------------------")
+                print("------------------------------------------")
                 print(f"--- {titulo_pantalla.upper()} ---")
-                print("-----------------------------------------")
+                print("------------------------------------------")
 
                 print("\nIngrese la fecha:")
                 dia = int(input("Día (DD): "))
