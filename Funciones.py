@@ -293,7 +293,27 @@ class funciones:
 
         # APELLIDO MATERNO ------------------------------------------------------------------
         app_materno = self.__obtener_apellido("Apellido Materno")
- 
+        
+        # SEXO EMPLEADO ---------------------------------------------------------------------------
+        while True:
+            try:
+                system("cls")
+                print("-----------------------------")
+                print("--- CREAR EMPLEADO (SEXO) ---")
+                print("-----------------------------")
+                sexo = int(input("\nIngrese sexo del empleado (1 MASCULINO, 2 FEMENINO, 3 OTRO): "))
+                if 0 < sexo <= 3:
+                    print("\nSexo guardado correctamente:", sexo)
+                    system("pause")
+                    break
+                else:
+                    print("\nEl sexo debe ser entre 1 y 3")
+                    system("pause")
+                    continue
+            except ValueError:
+                print("\n¡ERROR! El sexo debe ser escrito solo con numeros")
+                system("pause")
+
 
         # DIRECCION ------------------------------------------------------------------------
         while True:
@@ -474,6 +494,7 @@ class funciones:
         nuevo_empleado.setNombres(nombre)
         nuevo_empleado.setApellidoPaterno(app_paterno)
         nuevo_empleado.setApellidoMaterno(app_materno)
+        nuevo_empleado.setSexo(sexo)
         nuevo_empleado.setDireccion(direccion)
         nuevo_empleado.setNroTelefono(nroTelefono)
         nuevo_empleado.setEmail(email)
@@ -768,8 +789,42 @@ class funciones:
                 system("pause")
                 continue
         
-    def __estadisticasEmpleados(self):
-        pass
+    def __estadisticasEmpleados(self):       
+        system("cls")
+        print("-------------------------------------------------")
+        print("----- MENU GERENTE (ESTADISTICAS EMPLEADOS) -----")
+        print("-------------------------------------------------")
+        while True:
+            try:
+                print("\n1.- EMPLEADOS HABILITADOS")
+                print("2.- EMPLEADOS DESHABILITADOS")
+                print("3.- PROMEDIO DE EDADES (EXCEPTUANDO EMPLEADOS DESHABILITADOS)")
+                print("4.- PROMEDIO DE SALARIOS (EXCEPTUANDO EMPLEADOS DESHABILITADOS)")
+                print("5.- ADMINISTRADORES DE PROYECTOS")
+                print("6.- VOLVER")
+                op = int(input("\nDigite una opción: "))
+                if op > 0 or op <= 8:
+                    if op == 1:
+                        self.dao.listarEmpleadoHabilitados()
+                    elif op == 2:
+                        self.dao.listarEmpleadoDeshabilitados
+                    elif op == 3:
+                        self.__promedioEdades()
+                    elif op == 4:
+                        self.__promedioSalarios()
+                    elif op == 5:
+                        self.__listarAdministradores()
+                    elif op == 6:
+                        self.menuInicial()
+                        return
+                    else:
+                        print("\n--- Error De Opcion De Menú ---", end="\n\n")
+                        system("pause")
+                        continue
+            except Exception as e:
+                print(f"ERROR! No se puede mostrar la información que necesita: {e}", end="\n\n")
+                system("pause")
+                continue
 
 #-------------------------------------------------------------------------------------------
 #   FUNCIONES MENU GESTION DE PROYECTOS
@@ -902,6 +957,22 @@ class funciones:
                     system("pause")
                     continue
 
+    def __promedioSalarios(self):
+        pass
+        
+    def __promedioEdades(self):
+        system("cls")
+        print("-------------------------------------------------")
+        print("----- MENU GERENTE (ESTADISTICAS EMPLEADOS) -----")
+        print("-------------------------------------------------")
+        self.dao.promedioEdadesEmpleados()
+        system("pause")
+        self.__menuGerente()
+
+
+
+    def __listarAdministradores(self):
+        pass
 #---------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------

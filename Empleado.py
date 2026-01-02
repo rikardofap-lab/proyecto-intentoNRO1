@@ -1,6 +1,5 @@
 from Persona import persona
 
-
 class empleado(persona):
     __fechaInicioContrato = ""
     __salario = 0

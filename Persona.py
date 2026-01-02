@@ -7,6 +7,7 @@ class persona():
     __nroTelefono = ""
     __email = ""
     __fechaNacimiento = ""
+    __sexo = 0
 
 
     def __init__ (self):
@@ -76,3 +77,10 @@ class persona():
     
     def setFechaNacimiento(self, fechaNacimiento):
         self.__fechaNacimiento = fechaNacimiento
+#------------------------------------------------------------
+#   SEXO
+    def getSexo(self):
+        return self.__sexo
+    
+    def setSexo(self, sexo):
+        self.__sexo = sexo

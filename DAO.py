@@ -58,16 +58,17 @@ class dao:
             # --- FIN LÓGICA DE ENCRIPTACIÓN ---
 
             sql = """INSERT INTO empleados (
-                         rut_emp, nom_emp, app_emp, apm_emp, dir_emp, 
+                         rut_emp, nom_emp, app_emp, apm_emp, sex_emp, dir_emp, 
                          tel_emp, ema_emp, fec_nac_emp, fec_ini_emp, 
                          sal_emp, id_est, id_pro, id_tip_acc, 
                          nom_usu, con_usu) 
-                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             valores = (
                 empleado.getRut(),
                 empleado.getNombres(),
                 empleado.getApellidoPaterno(),
                 empleado.getApellidoMaterno(),
+                empleado.getSexo(),
                 empleado.getDireccion(),
                 empleado.getNroTelefono(),
                 empleado.getEmail(),
@@ -130,6 +131,8 @@ class dao:
             system("cls")
             print(f"Error al iniciar sesion (DAO): {e}")
 #----------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
 # OBTENER EMPLEADOS (PARA LISTAR)
     def ObtenerEmpleado(self):
         try:
@@ -147,6 +150,49 @@ class dao:
         except Exception as e:
             system("cls")
             print(f"Error al obtener el empleado (DAO): {e}")
+            return None
+#----------------------------------------------------------------------------------------------
+# OBTENER EMPLEADOS (PARA LISTAR EMPLEADO HABILITADOS) WHERE ID_EST = 1
+    def listarEmpleadoHabilitados(self):
+        try:
+            self.conectar()
+            sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, tel_emp, ema_emp, sal_emp, nom_est, id_pro 
+                FROM empleados e 
+                INNER JOIN estados est 
+                ON e.id_est = est.id_est 
+                AND e.id_est = 1
+                ORDER BY nom_emp ASC"""
+            self.cursor.execute(sql,)
+            rs = self.cursor.fetchall()
+            self.desconectar()
+            return rs
+                
+        except Exception as e:
+            system("cls")
+            print(f"Error al obtener el empleado (DAO): {e}")
+            return None
+#----------------------------------------------------------------------------------------------
+# OBTENER EMPLEADOS (PARA LISTAR EMPLEADOS DESHABILITADOS) WHERE ID_EST = 2
+    def listarEmpleadoDeshabilitados(self):
+        try:
+            self.conectar()
+            sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, tel_emp, ema_emp, sal_emp, nom_est, id_pro 
+                FROM empleados e 
+                INNER JOIN estados est 
+                ON e.id_est = est.id_est
+                AND e.id_est = 2
+                ORDER BY nom_emp ASC"""
+            self.cursor.execute(sql,)
+            rs = self.cursor.fetchall()
+            self.desconectar()
+            return rs
+                
+        except Exception as e:
+            system("cls")
+            print(f"Error al obtener el empleado (DAO): {e}")
+            return None
+#----------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------
 # BUSCAR EMPLEADO   
     def BuscarEmpleado(self, rut):
@@ -211,6 +257,7 @@ class dao:
             self.desconectar()
         except Exception as e:
             system("cls")
+            
             print(f"Error al modificar el empleado (DAO): {e}")
 
     def eliminarEmpleado(self, rut):
@@ -225,3 +272,10 @@ class dao:
             system("cls")
             print(f"Error al eliminar el empleado (DAO): {e}")
             return False
+        
+    def promedioEdadesEmpleados(self):
+        try:
+            sql = """
+            SELECT
+            ROUND(AVG(TO_DATE(fec_emp)    
+"""
