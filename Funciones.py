@@ -807,7 +807,7 @@ class funciones:
                     if op == 1:
                         self.dao.listarEmpleadoHabilitados()
                     elif op == 2:
-                        self.dao.listarEmpleadoDeshabilitados
+                        self.dao.listarEmpleadoDeshabilitados()
                     elif op == 3:
                         self.__promedioEdades()
                     elif op == 4:
@@ -825,6 +825,58 @@ class funciones:
                 print(f"ERROR! No se puede mostrar la información que necesita: {e}", end="\n\n")
                 system("pause")
                 continue
+
+    def __promedioEdades(self):
+        system("cls")
+        print("-------------------------------------------------")
+        print("----- MENU GERENTE (ESTADISTICAS EMPLEADOS) -----")
+        print("-------------------------------------------------")
+        
+        # Llamamos al DAO y guardamos el resultado en una variable
+        promedio = self.dao.promedioEdadesEmpleados()
+        
+        # Manejamos el resultado aquí
+        if promedio == 0:
+            print("\n>>> No hay empleados habilitados registrados para calcular un promedio.")
+        else:
+            print(f"\nEl promedio de edad de los empleados activos es: {promedio} años.")
+        
+        print("\n-------------------------------------------------")
+        system("pause")
+
+    def __promedioSalarios(self):
+        system("cls")
+        print("-------------------------------------------------")
+        print("----- MENU GERENTE (ESTADISTICAS EMPLEADOS) -----")
+        print("-------------------------------------------------")
+
+        promedio = self.dao.promedioSalariosEmpleados()
+
+        if promedio > 0:
+            print(f"\nEl promedio de salarios de los empleados activos es: ${promedio}")
+        else:
+            print("\n>>> No hay empleados habilitados registrados para calcular un promedio. ")
+        print("\n-------------------------------------------------")
+        system("pause")
+
+    def __listarAdministradores(self):
+            system("cls")
+            print("-------------------------------------------------")
+            print("----- LISTADO DE ADMINISTRADORES DE PROYECTOS ----")
+            print("-------------------------------------------------")
+
+            lista_admin = self.dao.obtenerAdministradores()
+
+            if len(lista_admin) > 0:
+                tabla = PrettyTable()
+                tabla.field_names = ["RUT", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO"]
+                for x in lista_admin:
+                    tabla.add_row(x)
+                print(tabla, end="\n\n")
+                system("pause")
+            else:
+                print("\nNo hay administradores registrados.", end="\n\n")
+                system("pause")
 
 #-------------------------------------------------------------------------------------------
 #   FUNCIONES MENU GESTION DE PROYECTOS
@@ -956,20 +1008,6 @@ class funciones:
                     print(f"\n¡ERROR! Al ingresar el apellido del empleado: {e}", end="\n\n")
                     system("pause")
                     continue
-
-    def __promedioSalarios(self):
-        pass
-        
-    def __promedioEdades(self):
-        system("cls")
-        print("-------------------------------------------------")
-        print("----- MENU GERENTE (ESTADISTICAS EMPLEADOS) -----")
-        print("-------------------------------------------------")
-        self.dao.promedioEdadesEmpleados()
-        system("pause")
-        self.__menuGerente()
-
-
 
     def __listarAdministradores(self):
         pass

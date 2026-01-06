@@ -275,7 +275,64 @@ class dao:
         
     def promedioEdadesEmpleados(self):
         try:
-            sql = """
-            SELECT
-            ROUND(AVG(TO_DATE(fec_emp)    
-"""
+            sql = """SELECT ROUND(AVG(TIMESTAMPDIFF(YEAR, fec_nac_emp, CURDATE())), 1) 
+                     FROM empleados 
+                     WHERE id_est = 1"""
+            self.conectar()
+            self.cursor.execute(sql)
+            rs = self.cursor.fetchone()
+            self.desconectar()
+            if rs is not None:               # 1. ¿Llegó algo de la base de datos?
+                if rs[0] is not None:        # 2. ¿El promedio tiene un número?
+                    return rs[0]             # 3. ¡Genial! Retorna solo el número.
+                else:
+                    return 0                 # 4. Estaba vacío, retorna 0.
+            else:
+                return 0                     # 5. No llegó nada, retorna 0.
+            #return rs[0] if rs and rs[0] is not None else 0 (TAMBIEN SE PUEDE ESCRIBIR TODO EN UNA LINEA ASÍ)
+        except Exception as e:
+            system("cls")
+            print(f"Error al obtener el promedio de edades de los empleados (DAO): {e}")
+            return 0
+
+
+    def promedioSalariosEmpleados(self):
+        try:
+            sql = """SELECT ROUND(AVG(sal_emp), 1) 
+                     FROM empleados 
+                     WHERE id_est = 1"""
+            self.conectar()
+            self.cursor.execute(sql)
+            rs = self.cursor.fetchone()
+            self.desconectar()
+            if rs is not None:
+                if rs[0] is not None:
+                    return rs[0]
+                else:
+                    return 0
+            else:
+                return 0
+        except Exception as e:
+            system("cls")
+            print(f"Error al obtener el promedio de salarios de los empleados (DAO): {e}")
+            return 0
+        
+    def obtenerAdministradores(self):
+        try:
+            sql = """SELECT rut_emp, nom_emp, app_emp, nom_tip_acc 
+                     FROM empleados e
+                     INNER JOIN tipo_acceso ta
+                     ON e.id_tip_acc = ta.id_tip_acc
+                     WHERE id_tip_acc = 1 AND id_est = 1"""
+            self.conectar()
+            self.cursor.execute(sql)
+            rs = self.cursor.fetchall()
+            self.desconectar()
+            if rs is not None:
+                return rs
+            else:
+                return []
+        except Exception as e:
+            print(f"Error al obtener los administradores (DAO): {e}")
+            return []
+        
