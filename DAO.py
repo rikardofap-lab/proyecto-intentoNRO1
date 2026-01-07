@@ -41,6 +41,18 @@ class dao:
             system("cls")
             print(f"Error al comprobar el RUT del empleado (DAO): {e}")
 
+    def comprobarNombreProyecto(self, nombre):
+            try:
+                # Buscamos el nombre exacto en la tabla Proyectos
+                sql = "SELECT nom_pro FROM Proyectos WHERE nom_pro = %s"
+                self.conectar()
+                self.cursor.execute(sql, (nombre,))
+                rs = self.cursor.fetchone() # Devuelve el nombre si existe, o None si no
+                self.desconectar()
+                return rs
+            except Exception as e:
+                print(f"Error al comprobar nombre del proyecto (DAO): {e}")
+                return None
 #----------------------------------------------------------------------------------------------
 # CREA EMPLEADO
     def insertarEmpleado(self, empleado):
@@ -85,6 +97,7 @@ class dao:
             self.cursor.execute(sql, valores)
             self.con.commit()
             self.desconectar()
+            return True
         except Exception as e:
             system("cls")
             print(f"Error al insertar el empleado (DAO): {e}")
@@ -133,67 +146,7 @@ class dao:
 #----------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------
-# OBTENER EMPLEADOS (PARA LISTAR)
-    def ObtenerEmpleado(self):
-        try:
-            self.conectar()
-            sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, tel_emp, ema_emp, sal_emp, nom_est, id_pro 
-                FROM empleados e 
-                INNER JOIN estados est 
-                ON e.id_est = est.id_est 
-                ORDER BY nom_emp ASC"""
-            self.cursor.execute(sql,)
-            rs = self.cursor.fetchall()
-            self.desconectar()
-            return rs
-                
-        except Exception as e:
-            system("cls")
-            print(f"Error al obtener el empleado (DAO): {e}")
-            return None
-#----------------------------------------------------------------------------------------------
-# OBTENER EMPLEADOS (PARA LISTAR EMPLEADO HABILITADOS) WHERE ID_EST = 1
-    def listarEmpleadoHabilitados(self):
-        try:
-            self.conectar()
-            sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, tel_emp, ema_emp, sal_emp, nom_est, id_pro 
-                FROM empleados e 
-                INNER JOIN estados est 
-                ON e.id_est = est.id_est 
-                AND e.id_est = 1
-                ORDER BY nom_emp ASC"""
-            self.cursor.execute(sql,)
-            rs = self.cursor.fetchall()
-            self.desconectar()
-            return rs
-                
-        except Exception as e:
-            system("cls")
-            print(f"Error al obtener el empleado (DAO): {e}")
-            return None
-#----------------------------------------------------------------------------------------------
-# OBTENER EMPLEADOS (PARA LISTAR EMPLEADOS DESHABILITADOS) WHERE ID_EST = 2
-    def listarEmpleadoDeshabilitados(self):
-        try:
-            self.conectar()
-            sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, tel_emp, ema_emp, sal_emp, nom_est, id_pro 
-                FROM empleados e 
-                INNER JOIN estados est 
-                ON e.id_est = est.id_est
-                AND e.id_est = 2
-                ORDER BY nom_emp ASC"""
-            self.cursor.execute(sql,)
-            rs = self.cursor.fetchall()
-            self.desconectar()
-            return rs
-                
-        except Exception as e:
-            system("cls")
-            print(f"Error al obtener el empleado (DAO): {e}")
-            return None
-#----------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------
+
 # BUSCAR EMPLEADO   
     def BuscarEmpleado(self, rut):
         try:
@@ -295,7 +248,6 @@ class dao:
             print(f"Error al obtener el promedio de edades de los empleados (DAO): {e}")
             return 0
 
-
     def promedioSalariosEmpleados(self):
         try:
             sql = """SELECT ROUND(AVG(sal_emp), 1) 
@@ -336,3 +288,58 @@ class dao:
             print(f"Error al obtener los administradores (DAO): {e}")
             return []
         
+    def listarEmpleadosGeneral(self, criterio):
+        try:
+            sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, tel_emp, ema_emp, sal_emp, nom_est, id_pro 
+                    FROM empleados e 
+                    INNER JOIN estados est ON e.id_est = est.id_est """
+            if criterio == 1: sql += "ORDER BY nom_emp ASC" # Todos
+            elif criterio == 2: sql += "WHERE e.id_est = 1 ORDER BY nom_emp ASC" # Habilitados
+            elif criterio == 3: sql += "WHERE e.id_est = 2 ORDER BY nom_emp ASC" # Deshabilitados
+            elif criterio == 4: sql += "WHERE e.id_pro IS NOT NULL ORDER BY nom_emp ASC" # Asignados
+            elif criterio == 5: sql += "WHERE e.id_pro IS NULL ORDER BY nom_emp ASC" # Sin asignar
+
+            self.conectar()
+            self.cursor.execute(sql)
+            rs = self.cursor.fetchall()
+            self.desconectar()
+            return rs if rs else []
+        except Exception as e:
+            print(f"Error en listado genérico (DAO): {e}")
+            return []
+            
+    def insertarProyecto(self, proyecto):
+        try:
+            sql = """INSERT INTO proyectos (
+                nom_pro, des_pro, fec_ini_pro, id_est) VALUES (%s, %s, %s, %s)"""
+            valores = (
+                proyecto.getNombre(),
+                proyecto.getDescripcion(),
+                proyecto.getFechaInicio(),
+                proyecto.getIdEstado()
+            )
+            self.conectar()
+            self.cursor.execute(sql, valores)
+            self.con.commit()
+            self.desconectar()
+            return True
+        except Exception as e:
+            print(f"Error al insertar el proyecto (DAO): {e}")
+            return False
+
+    def listarProyectosGeneral(self, criterio):
+        try:
+            sql = """SELECT nom_pro, des_pro, fec_ini_pro, nom_est 
+                    FROM proyectos p INNER JOIN estados e ON p.id_est = e.id_est """
+            if criterio == 1: sql += "ORDER BY nom_pro ASC" # Todos
+            elif criterio == 2: sql += "WHERE e.id_est = 1 ORDER BY nom_pro ASC" # Habilitados
+            elif criterio == 3: sql += "WHERE e.id_est = 2 ORDER BY nom_pro ASC" # Deshabilitados
+
+            self.conectar()
+            self.cursor.execute(sql)
+            rs = self.cursor.fetchall()
+            self.desconectar()
+            return rs if rs else []
+        except Exception as e:
+            print(f"Error en listado de proyectos (DAO): {e}")
+            return []

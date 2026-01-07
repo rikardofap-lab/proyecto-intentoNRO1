@@ -261,7 +261,12 @@ class funciones:
                     else:
                         print(f"RUT {rut_formateado} registrado correctamente", end="\n\n")
                         system("pause")
-                        break                  
+                        break
+                else:
+                    print("\n--- Error De Opcion De Menú Crear Empleado Debe Ser Del 1 al 2!! ---", end="\n\n")
+                    system("pause")
+                    continue
+                   
             except Exception as e:
                 print(f"\n¡ERROR! Al ingresar el rut del empleado: {e}", end="\n\n")
 
@@ -513,7 +518,7 @@ class funciones:
 
     def __listarEmpleados(self):
         try:
-            respuesta = self.dao.ObtenerEmpleado() 
+            respuesta = self.dao.listarEmpleadosGeneral(1) 
             if len(respuesta)== 0:
                 print("No hay empleados registrados.")
                 system("pause")
@@ -805,9 +810,9 @@ class funciones:
                 op = int(input("\nDigite una opción: "))
                 if op > 0 or op <= 8:
                     if op == 1:
-                        self.dao.listarEmpleadoHabilitados()
+                        self.__listaEmpleadosHab()
                     elif op == 2:
-                        self.dao.listarEmpleadoDeshabilitados()
+                        self.__listaEmpleadosDesh()
                     elif op == 3:
                         self.__promedioEdades()
                     elif op == 4:
@@ -825,6 +830,50 @@ class funciones:
                 print(f"ERROR! No se puede mostrar la información que necesita: {e}", end="\n\n")
                 system("pause")
                 continue
+
+    def __listaEmpleadosHab(self):
+        try:
+            system("cls")
+            respuesta = self.dao.listarEmpleadosGeneral(2)
+            if len(respuesta) == 0:
+                print("No hay empleados habilitados registrados.", end="\n\n")
+                system("pause")
+            else:
+                system("cls")
+                print("-----------------------------------------------")
+                print("-------- LISTAR EMPLEADOS (HABILITADOS)--------")
+                print("-----------------------------------------------")
+                tabla = PrettyTable()
+                tabla.field_names = ["RUT", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "TELEFONO", "EMAIL", "SALARIO", "ESTADO", "ID PROYECTO"]
+                for x in respuesta:
+                    tabla.add_row(x)
+                    print(tabla, end="\n\n")
+                system("pause")
+        except Exception as e:
+            print(f"\n¡ERROR! Al listar los empleados habilitados: {e}", end="\n\n")
+            system("pause")
+
+    def __listaEmpleadosDesh(self):
+        try:
+            system("cls")
+            respuesta = self.dao.listarEmpleadosGeneral(3)
+            if len(respuesta) == 0:
+                print("No hay empleados habilitados registrados.", end="\n\n")
+                system("pause")
+            else:
+                system("cls")
+                print("-----------------------------------------------")
+                print("-------- LISTAR EMPLEADOS (HABILITADOS)--------")
+                print("-----------------------------------------------")
+                tabla = PrettyTable()
+                tabla.field_names = ["RUT", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "TELEFONO", "EMAIL", "SALARIO", "ESTADO", "ID PROYECTO"]
+                for x in respuesta:
+                    tabla.add_row(x)
+                    print(tabla, end="\n\n")
+                system("pause")
+        except Exception as e:
+            print(f"\n¡ERROR! Al listar los empleados habilitados: {e}", end="\n\n")
+            system("pause")
 
     def __promedioEdades(self):
         system("cls")
@@ -881,7 +930,70 @@ class funciones:
 #-------------------------------------------------------------------------------------------
 #   FUNCIONES MENU GESTION DE PROYECTOS
     def __crearProyecto(self):
-        pass
+            while True:
+                try:
+                    system("cls")
+                    print("------------------------------------------------")
+                    print("----------- CREAR PROYECTO (INICIO) ------------")
+                    print("------------------------------------------------")
+                    print("¿Está seguro que quiere crear un proyecto? \n1- Si \n2- No")
+                    op = int(input("\nDigite una opción: "))
+
+                    if op == 2:
+                        return 
+                    
+                    if op == 1:
+                        nuevo_p = proyecto() 
+                        
+                        # --- NOMBRE ---
+                        while True:
+                            nombre_in = input("\nIngrese el nombre del proyecto: ").strip()
+                            if 6 <= len(nombre_in) <= 60:
+                                nombre_formateado = nombre_in.title()
+                                if self.dao.comprobarNombreProyecto(nombre_formateado) is not None:
+                                    print("El nombre ya existe. Intente con otro.")
+                                    system("pause")
+                                else:
+                                    break 
+                            else:
+                                print("\nEl nombre debe tener entre 6 y 60 caracteres.")
+                                system("pause")
+
+                        # --- DESCRIPCIÓN ---
+                        while True:
+                            desc = input("\nIngrese la descripción (mín. 20 caracteres): ").strip()
+                            if 20 <= len(desc) <= 200:
+                                break
+                            else:
+                                print("\nLa descripción es demasiado corta o muy larga.")
+                                system("pause")
+
+                        # --- FECHA ---
+                        # reutilizo la función ya validada para la fecha
+                        nuevo_p.setNomProyecto(nombre_formateado)
+                        nuevo_p.setDescripcion(desc.capitalize())
+                        f_inicio = self.__obtener_fecha("CREAR PROYECTO (FECHA INICIO)")
+                        nuevo_p.setFechaInicio(f_inicio.strftime('%Y-%m-%d'))
+                        nuevo_p.setIdEstado(1) # Habilitado por defecto
+
+                        # --- GUARDADO FINAL ---
+                        if self.dao.insertarProyecto(nuevo_p): # Llamamos al DAO
+                            print("\n¡Proyecto creado exitosamente!")
+                        else:
+                            print("\nError al guardar en la base de datos.")
+                        
+                        system("pause")
+                        return # Este return vuelve al menu proyectos
+                    else:
+                        print("\n--- Opción no válida ---")
+                        system("pause")
+                except ValueError:
+                    print("\n¡ERROR! Debe ingresar un número.")
+                    system("pause")
+                except Exception as e:
+                    print(f"\n¡Error inesperado!: {e}")
+                    system("pause")
+                    return
 
     def __listarProyectos(self):
         pass

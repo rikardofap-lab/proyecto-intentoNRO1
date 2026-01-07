@@ -49,3 +49,54 @@ El proyecto sigue el patrón de diseño **DAO (Data Access Object)**, separando 
 1.  **Pruebas de Borde (Testing):** * Verificar que los promedios retornen `0` correctamente cuando no existan empleados habilitados en la base de datos.
 2.  **Validación de Interfaz:** * Confirmar que la tabla de administradores visualice el nombre del cargo (`nom_tip_acc`) y no el ID numérico.
 3.  **Módulo de Asignación:** * Iniciar la lógica para asignar empleados a proyectos, respetando la relación 1:N definida en el diagrama de clases.
+
+## 📅 Fecha: 06 de enero, 2026
+## 🛠️ Refactorización de Arquitectura (Cierre del día)
+
+**Mejora de Eficiencia:**
+* Se eliminaron los métodos redundantes `ObtenerEmpleado`, `listarEmpleadoHabilitados` y `listarEmpleadoDeshabilitados` en el DAO.
+* Se implementó el **Patrón de Listado Genérico**: una sola función centralizada que utiliza parámetros numéricos (1-5) para filtrar los resultados de la base de datos según la necesidad de la interfaz.
+* Se optimizaron los llamados en `Funciones.py`, reduciendo la complejidad del controlador y facilitando futuras expansiones del sistema.
+
+**Estado del Proyecto:**
+* Código limpio (Clean Code) y sin funciones "huérfanas".
+* Estructura lista para iniciar el módulo de asignación de empleados a proyectos.
+
+# 📝 Bitácora de Desarrollo - Proyecto Nro. 1
+
+## 📅 Fecha: 06 de enero (PARTE II), 2026
+**Objetivo:** Iniciar el Módulo de Gestión de Proyectos y asegurar la integridad de datos (evitar duplicados).
+
+---
+
+### ✅ Logros y Avances
+
+#### 1. Capa de Acceso a Datos (`DAO.py`)
+* **Persistencia de Proyectos:**
+    * Se implementó el método `insertarProyecto`, permitiendo el registro de nuevas entidades en la tabla `Proyectos` de la base de datos.
+* **Validación de Integridad:**
+    * Se creó el método `comprobarNombreProyecto` para verificar la existencia previa de un nombre en la base de datos antes de permitir una inserción.
+    * Este método retorna un valor `None` si el nombre está disponible, facilitando la lógica de control en la capa de funciones.
+
+### 🛠️ Pendientes para la Siguiente Sesión
+
+1.  **Interfaz de Proyectos (`Funciones.py`):**
+    * Desarrollar el método `__crearProyecto` integrando la validación de nombres duplicados.
+    * Aplicar formato `.title()` o `.capitalize()` a los nombres de proyectos para estandarizar la búsqueda y visualización.
+2.  **Visualización de Proyectos:**
+    * Implementar `__listarProyectos` en la capa de funciones utilizando `PrettyTable` para verificar los registros actuales.
+3.  **Test de Duplicados:**
+    * Intentar crear un proyecto con un nombre ya existente (ej: "Desarrollo Ecologico") para confirmar que el sistema bloquea la operación.
+
+## 📅 Fecha: 07 de enero, 2026 (Sesión Tarde)
+**Objetivo:** Implementación de consultas genéricas para el módulo de Proyectos (listarProyectosGeneral).
+
+### ✅ Logros y Avances
+* **Capa de Acceso a Datos (`DAO.py`):**
+    * Se creó el método `listarProyectos(criterio)` aplicando el patrón de listado genérico.
+    * Integración de `INNER JOIN` con la tabla `estados` para mostrar nombres descriptivos en lugar de IDs numéricos.
+    * Implementación de protección de retorno mediante listas vacías `[]` para asegurar la estabilidad de la interfaz.
+
+* [ ] **Tarea de Testing:** Ejecutar `PruebasUnitarias.py` y verificar que el DAO responda correctamente a los casos de éxito y error.
+* [ ] **Mantenimiento:** Decidir si implementar una base de datos de pruebas para no alterar los registros de producción.
+* Probar y romper TODO a ver si sirve
