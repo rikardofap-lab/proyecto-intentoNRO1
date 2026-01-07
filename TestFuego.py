@@ -25,6 +25,7 @@ class TestFuegoTotal(unittest.TestCase):
         e.setFechaNacimiento("1990-01-01")
         e.setFechaInicioContrato("2024-01-01")
         e.setSalario(1000000)
+        e.setSexo(1)
         e.setIdEstado(1)
         e.setIdTipoAcc(3)
 

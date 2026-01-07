@@ -70,7 +70,7 @@ class dao:
             # --- FIN LÓGICA DE ENCRIPTACIÓN ---
 
             sql = """INSERT INTO empleados (
-                         rut_emp, nom_emp, app_emp, apm_emp, sex_emp, dir_emp, 
+                         rut_emp, nom_emp, app_emp, apm_emp, id_sex, dir_emp, 
                          tel_emp, ema_emp, fec_nac_emp, fec_ini_emp, 
                          sal_emp, id_est, id_pro, id_tip_acc, 
                          nom_usu, con_usu) 
