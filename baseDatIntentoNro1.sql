@@ -1,3 +1,4 @@
+-- 1. ESTRUCTURA DE TABLAS
 CREATE TABLE estados (
     id_est INT PRIMARY KEY,
     nom_est VARCHAR(50) NOT NULL
@@ -13,6 +14,7 @@ CREATE TABLE sexos(
     nom_sex VARCHAR(50) NOT NULL
 );
 
+-- 2. ESTRUCTURA DE PROYECTOS
 CREATE TABLE Proyectos (
     id_pro INT PRIMARY KEY AUTO_INCREMENT,
     nom_pro VARCHAR(50) NOT NULL,
@@ -22,6 +24,7 @@ CREATE TABLE Proyectos (
     FOREIGN KEY (id_est) REFERENCES estados(id_est)
 );
 
+-- 3. ESTRUCTURA DE EMPLEADOS
 CREATE TABLE empleados (
     id_emp INT PRIMARY KEY AUTO_INCREMENT,
     rut_emp VARCHAR(12) NOT NULL,
@@ -33,50 +36,47 @@ CREATE TABLE empleados (
     ema_emp VARCHAR(100) NOT NULL,
     fec_nac_emp DATE NOT NULL,
     fec_ini_emp DATE NOT NULL,
-    sal_emp INT(10) NOT NULL ,
-    id_est INT NOT NULL, -- ¡AQUI! Especificamos si el empleado está habilitado o no.
-    id_pro INT NULL, -- ¡ESTA COLUMNA! Almacena el proyecto actual del empleado. NULL si no está asignado.
-    id_tip_acc INT NOT NULL, -- ¡ESTE! Es el tipo de acceso que tiene el empleado en su usuario.
-    nom_usu VARCHAR(50) UNIQUE NULL, -- Nombre de usuario para login. UNIQUE para que no se repita. Puede ser NULL.
-    con_usu VARCHAR(255) NULL, -- Contraseña (hasheada). Puede ser NULL.
-    id_sex INT(1) NOT NULL,
+    sal_emp INT(10) NOT NULL,
+    id_est INT NOT NULL,
+    id_pro INT NULL,
+    id_tip_acc INT NOT NULL,
+    nom_usu VARCHAR(50) UNIQUE NULL,
+    con_usu VARCHAR(255) NULL,
+    id_sex INT(1) NOT NULL, 
     FOREIGN KEY (id_sex) REFERENCES sexos(id_sex),    
     FOREIGN KEY (id_est) REFERENCES estados(id_est),
     FOREIGN KEY (id_pro) REFERENCES Proyectos(id_pro),
     FOREIGN KEY (id_tip_acc) REFERENCES tipo_acceso(id_tip_acc)
 );
--- HABILITADO: Es empleado activo de la empresa
--- DESHABILITADO: Es un empleado que fue desvinculado de la empresa
-INSERT INTO estados (id_est, nom_est) VALUES (1, 'HABILITADO');
-INSERT INTO estados (id_est, nom_est) VALUES (2, 'DESHABILITADO');
 
--- GESTION DE PROYECTOS: Encargados del CRUD de los proyectos
--- GERENTE: Encargado del CRUD de los empleados y asignarlos a los proyectos
-INSERT INTO tipo_acceso (id_tip_acc, nom_tip_acc) VALUES (1, 'GESTION DE PROYECTOS');
-INSERT INTO tipo_acceso (id_tip_acc, nom_tip_acc) VALUES (2, 'GERENTE');
-INSERT INTO tipo_acceso (id_tip_acc, nom_tip_acc) VALUES (3, 'EMPLEADO SIN ACCESO');
+-- 4. INSERCIÓN DE DATOS 
+INSERT INTO estados (id_est, nom_est) VALUES (1, 'HABILITADO'), (2, 'DESHABILITADO');
 
---TIPOS DE SEXOS DE LOS EMPLEADOS 
--- (1.- MASCULINO)
--- (2.- FEMENINO)
--- (3.- OTRO)
-INSERT INTO sexos (id_sex, nom_sex) VALUES (1, 'MASCULINO');
-INSERT INTO sexos (id_sex, nom_sex) VALUES (2, 'FEMENINO');
-INSERT INTO sexos (id_sex, nom_sex) VALUES (3, 'OTRO');
+INSERT INTO tipo_acceso (id_tip_acc, nom_tip_acc) VALUES 
+(1, 'GESTION DE PROYECTOS'), 
+(2, 'GERENTE'), 
+(3, 'EMPLEADO SIN ACCESO');
 
--- Insertamos un par de proyectos de ejemplo
+INSERT INTO sexos (id_sex, nom_sex) VALUES (1, 'MASCULINO'), (2, 'FEMENINO'), (3, 'OTRO');
+
+-- 5. INSERCIÓN DE PROYECTOS BASE
 INSERT INTO Proyectos (nom_pro, des_pro, fec_ini_pro, id_est) VALUES 
 ('DESARROLLO ECOLOGICO', 'Proyecto para la reforestación de áreas verdes en la zona sur.', '2023-01-15', 1),
 ('SISTEMA DE INVENTARIO', 'Implementación de un nuevo sistema de inventario para bodegas.', '2023-03-01', 1);
 
-
--- Insertamos empleados de ejemplo con diferentes roles y estados
-
--- Un Gerente con acceso al sistema
+-- 6. INSERCIÓN DE EMPLEADOS 
 INSERT INTO empleados (rut_emp, nom_emp, app_emp, apm_emp, dir_emp, tel_emp, ema_emp, fec_nac_emp, fec_ini_emp, sal_emp, id_est, id_pro, id_tip_acc, nom_usu, con_usu, id_sex) VALUES 
-('11111111-1', 'Wilmer', 'Alvarez', 'Riera', 'Av. Principal 123', '+56911111111', 'ricardo.alva@empresa.com', '1980-05-20', '2010-03-01', 2500000, 1, NULL, 2, 'walvarez', 'gerente',1),
--- Un empleado de RRHH/Gestión de Proyectos con acceso al sistema
-('22222222-2', 'Carolina', 'Mora', 'Perez', 'Calle Falsa 456', '+56922222222', 'carolina.mora@empresa.com', '1985-08-15', '2015-06-10', 1500000, 1, NULL, 1, 'cmora', 'rrhh',2),
--- Un empleado sin acceso, habilitado y sin proyecto (listo para ser asignado)
-('33333333-3', 'Juan', 'Gonzalez', 'Rojas', 'Pasaje Los Lirios 789', '+56933333333', 'juan.gonzalez@empresa.com', '1990-11-30', '2020-09-01', 800000, 1, NULL, 3, NULL, NULL,1),
-('55555555-5', 'Benjamin', 'Medina', 'Colina', 'Coltauco', '+56345678910', 'benja@inakapmail.cl', '2003-08-05', '2025-10-25', 600000, 1, NULL, 1'B55555555-5', 'gAAAAABo_OGYZDNELy_XPw4v-bPII7dg__2YltYbsHyYp0nWDH6GYjksYbXZy8N3DLnEvDjw5Y5z9rWvDduGHcRL5kVEgVlc8g==', 1);
+-- Wilmer (Gerente, Masculino)
+('11111111-1', 'Wilmer', 'Alvarez', 'Riera', 'Av. Principal 123', '+56911111111', 'ricardo.alva@empresa.com', '1980-05-20', '2010-03-01', 2500000, 1, NULL, 2, 'walvarez', 'gAAAAABo_B2RqLFvoz30WKQ1WA0e6Svo5IWH-e8d7lsJmU6rO9...', 1),
+
+-- Carolina (Gestión Proyectos, Femenino)
+('22222222-2', 'Carolina', 'Mora', 'Perez', 'Calle Falsa 456', '+56922222222', 'carolina.mora@empresa.com', '1985-08-15', '2015-06-10', 1500000, 1, NULL, 1, 'cmora', 'gAAAAABo_CKeUEbZHbyWlz0OJHZalzFLsNdPJxYZFuq78Lniw-...', 2),
+
+-- Juancho (Empleado Sin Acceso, Masculino)
+('33333333-3', 'Juancho', 'Gonzalez', 'Rojas', 'Pasaje Los Lirios 789', '+56933333333', 'juan.gonzalez@empresa.com', '1990-11-30', '2020-09-01', 800000, 1, NULL, 3, NULL, NULL, 1),
+
+-- Bob Marley (Añadido desde tus tests, Masculino)
+('44444444-4', 'Bob', 'Marley', 'Alvarez', 'Jamaica', '+56123456789', 'ganya@fumodesdelos14.cl', '1978-04-05', '2000-01-01', 600000, 1, NULL, 3, NULL, NULL, 1),
+
+-- Benjamin (Gestión Proyectos, Masculino )
+('55555555-5', 'Benjamin', 'Medina', 'Colina', 'Coltauco', '+56345678910', 'benja@inakapmail.cl', '2003-08-05', '2025-10-25', 600000, 1, NULL, 1, 'B55555555-5', 'gAAAAABo_OGYZDNELy_XPw4v-bPII7dg__2YltYbsHyYp0nWDH6GYjksYbXZy8N3DLnEvDjw5Y5z9rWvDduGHcRL5kVEgVlc8g==', 1);

@@ -237,7 +237,7 @@ class dao:
             self.desconectar()
             if rs is not None:               # 1. ¿Llegó algo de la base de datos?
                 if rs[0] is not None:        # 2. ¿El promedio tiene un número?
-                    return rs[0]             # 3. ¡Genial! Retorna solo el número.
+                    return float(rs[0])             # 3. ¡Genial! Retorna solo el número.
                 else:
                     return 0                 # 4. Estaba vacío, retorna 0.
             else:
@@ -259,7 +259,7 @@ class dao:
             self.desconectar()
             if rs is not None:
                 if rs[0] is not None:
-                    return rs[0]
+                    return float(rs[0])
                 else:
                     return 0
             else:
@@ -303,7 +303,7 @@ class dao:
             self.cursor.execute(sql)
             rs = self.cursor.fetchall()
             self.desconectar()
-            return rs if rs else []
+            return list(rs) if rs else []
         except Exception as e:
             print(f"Error en listado genérico (DAO): {e}")
             return []
@@ -313,7 +313,7 @@ class dao:
             sql = """INSERT INTO proyectos (
                 nom_pro, des_pro, fec_ini_pro, id_est) VALUES (%s, %s, %s, %s)"""
             valores = (
-                proyecto.getNombre(),
+                proyecto.getNomProyecto(),
                 proyecto.getDescripcion(),
                 proyecto.getFechaInicio(),
                 proyecto.getIdEstado()
@@ -339,7 +339,7 @@ class dao:
             self.cursor.execute(sql)
             rs = self.cursor.fetchall()
             self.desconectar()
-            return rs if rs else []
+            return list(rs) if rs else []
         except Exception as e:
             print(f"Error en listado de proyectos (DAO): {e}")
             return []

@@ -100,3 +100,16 @@ El proyecto sigue el patrón de diseño **DAO (Data Access Object)**, separando 
 * [ ] **Tarea de Testing:** Ejecutar `PruebasUnitarias.py` y verificar que el DAO responda correctamente a los casos de éxito y error.
 * [ ] **Mantenimiento:** Decidir si implementar una base de datos de pruebas para no alterar los registros de producción.
 * Probar y romper TODO a ver si sirve
+
+### 🛠️ Correcciones de Infraestructura y Sincronización
+* **Regularización de Base de Datos:** Se identificó y resolvió una inconsistencia crítica de esquema mediante la incorporación de la columna `id_sex` en la tabla `empleados`.
+* **Integridad de Datos:** Se actualizaron los registros históricos (Wilmer, Carolina, Juancho, Bob) para asignar géneros válidos, preservando la información sensible y las credenciales encriptadas.
+
+### ✅ Calidad y Testing
+* **Certificación de Tipos (DAO):** Se estandarizaron los retornos del DAO (conversión de Tuplas a Listas y de Decimales a Floats) para asegurar la estabilidad de la interfaz.
+* **Pruebas Unitarias:** Ejecución exitosa de `PruebasUnitarias.py` con resultado **OK**.
+* **Test de Fuego (Integración):** El sistema superó el circuito completo de inserción, búsqueda y validación de duplicados tanto para empleados como para proyectos.
+
+### 📂 Estado Actual del Módulo Proyectos
+* **DAO:** Métodos de inserción, búsqueda y listado general totalmente operativos.
+* **Lógica:** Validaciones de longitud de caracteres y prevención de nombres duplicados implementada.
