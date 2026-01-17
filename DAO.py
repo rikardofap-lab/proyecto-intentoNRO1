@@ -329,7 +329,7 @@ class dao:
 
     def listarProyectosGeneral(self, criterio):
         try:
-            sql = """SELECT nom_pro, des_pro, fec_ini_pro, nom_est 
+            sql = """SELECT id_pro, nom_pro, des_pro, fec_ini_pro, nom_est 
                     FROM proyectos p INNER JOIN estados e ON p.id_est = e.id_est """
             if criterio == 1: sql += "ORDER BY nom_pro ASC" # Todos
             elif criterio == 2: sql += "WHERE e.id_est = 1 ORDER BY nom_pro ASC" # Habilitados
@@ -343,3 +343,4 @@ class dao:
         except Exception as e:
             print(f"Error en listado de proyectos (DAO): {e}")
             return []
+

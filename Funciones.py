@@ -996,7 +996,27 @@ class funciones:
                     return
 
     def __listarProyectos(self):
-        pass
+            try:
+                respuesta = self.dao.listarProyectosGeneral(1)
+                if len(respuesta) == 0:
+                    print("No hay proyectos registrados.", end="\n\n")
+                    system("pause")
+                    return
+                else:
+                    system("cls")
+                    print("------------------------------------------------")
+                    print("--------------- LISTAR PROYECTOS ---------------")
+                    print("------------------------------------------------")
+                    tabla = PrettyTable()
+                    tabla.field_names = ["ID", "NOMBRE", "DESCRIPCION", "FECHA INICIO", "ESTADO"]
+                    for x in respuesta:
+                        tabla.add_row(x)
+                    print(tabla, end="\n\n")
+                    system("pause")
+            except Exception as e:
+                print(f"\n¡ERROR! Al listar los proyectos: {e}", end="\n\n")
+                system("pause")
+                return
 
     def __buscarProyecto(self):
         pass
