@@ -113,3 +113,29 @@ El proyecto sigue el patrón de diseño **DAO (Data Access Object)**, separando 
 ### 📂 Estado Actual del Módulo Proyectos
 * **DAO:** Métodos de inserción, búsqueda y listado general totalmente operativos.
 * **Lógica:** Validaciones de longitud de caracteres y prevención de nombres duplicados implementada.
+---
+
+## 📅 Fecha: 17 de enero, 2026 (Corrección de Integración)
+**Objetivo:** Resolver error de atributo por desincronización de nombres entre capas.
+
+### ✅ Logros y Avances
+* **Depuración de Interfaz:**
+    * Se corrigió el `AttributeError` en `__listarProyectos` al actualizar la llamada al método correcto del DAO (`listarProyectosGeneral`).
+* **Consistencia de Código:**
+    * Se verificó que todos los llamados desde `Funciones.py` coincidan con las firmas de los métodos definidos en `DAO.py`.
+
+---
+
+## 📅 Fecha: 20 de enero, 2026
+**Proyecto:** Módulo de Búsqueda de Proyectos.
+
+### ✅ Logros y Avances
+* **Nueva Función:** Implementación de `__buscarProyecto` (Interfaz) y `buscarProyecto` (DAO).
+* **Refactorización y "Bugfixing":**
+    1. **Validación de Entradas:** Se añadió control de tipos con `.isdigit()` para evitar cierres inesperados por ingresos no numéricos.
+    2. **Optimización de Flujo:** Se corrigieron errores de indentación y bloques `else` redundantes para mejorar la legibilidad y el rendimiento.
+    3. **Sincronización de Objetos:** Se ajustó el DAO para mapear correctamente el nombre del estado (`nom_est`) al objeto `proyecto`.
+
+    MODIFICAR PROYECTO EN PROCESO:
+    FUNCIONES POCO AVANZADO
+    DAO (MODIFICAR PROYECTO) AUN NO EMPEZADO

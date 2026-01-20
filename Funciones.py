@@ -847,7 +847,7 @@ class funciones:
                 tabla.field_names = ["RUT", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "TELEFONO", "EMAIL", "SALARIO", "ESTADO", "ID PROYECTO"]
                 for x in respuesta:
                     tabla.add_row(x)
-                    print(tabla, end="\n\n")
+                print(f"{tabla}", end="\n\n")
                 system("pause")
         except Exception as e:
             print(f"\n¡ERROR! Al listar los empleados habilitados: {e}", end="\n\n")
@@ -869,7 +869,8 @@ class funciones:
                 tabla.field_names = ["RUT", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "TELEFONO", "EMAIL", "SALARIO", "ESTADO", "ID PROYECTO"]
                 for x in respuesta:
                     tabla.add_row(x)
-                    print(tabla, end="\n\n")
+                print(f"{tabla}", end="\n\n")
+                print("-----------------------------------------------")
                 system("pause")
         except Exception as e:
             print(f"\n¡ERROR! Al listar los empleados habilitados: {e}", end="\n\n")
@@ -1011,7 +1012,7 @@ class funciones:
                     tabla.field_names = ["ID", "NOMBRE", "DESCRIPCION", "FECHA INICIO", "ESTADO"]
                     for x in respuesta:
                         tabla.add_row(x)
-                    print(tabla, end="\n\n")
+                    print(f"{tabla}", end="\n\n")
                     system("pause")
             except Exception as e:
                 print(f"\n¡ERROR! Al listar los proyectos: {e}", end="\n\n")
@@ -1019,10 +1020,67 @@ class funciones:
                 return
 
     def __buscarProyecto(self):
-        pass
+        try:
+            system("cls")
+            print("---------------------------------")
+            print("-------- BUSCAR PROYECTO --------")
+            print("---------------------------------")
+            entrada = (input("\nIngrese el ID del proyecto: "))
+            if not entrada.isdigit():
+                print("ERROR! El id debe ser un numero entero.", end="\n\n")
+                system("pause")
+                return
+            id_proyecto = int(entrada)
+            pro = self.dao.buscarProyecto(id_proyecto)
+            if pro is None:
+                print("No hay un proyecto registrado con ese ID.", end="\n\n")
+                system("pause")
+                return
+            else:
+                system("cls")
+                print("----------------------------------")
+                print(f"\n----- PROYECTO ENCONTRADO -----")
+                print("----------------------------------")
+                print(f"\nID: {pro.getIdProyecto()}")
+                print(f"NOMBRE: {pro.getNomProyecto()}")
+                print(f"DESCRIPCION: {pro.getDescripcion()}")
+                print(f"FECHA INICIO: {pro.getFechaInicio()}")
+                print(f"ESTADO: {pro.getNombreEstado()}", end="\n\n")
+                system("pause")
+        except Exception as e:
+            print(f"\n¡ERROR! Al buscar el proyecto: {e}", end="\n\n")
+            system("pause")
+            return
 
     def __modificarProyecto(self):
-        pass
+        try:
+            print("-------------------------------------------------")
+            print("-------------- MODIFICAR PROYECTO ----------------")
+            print("-------------------------------------------------")
+            pro = self.dao.buscarProyecto()
+            if pro is None:
+                print("No hay un proyecto registrado con ese ID.", end="\n\n")
+                system("pause")
+                return
+            else:
+                system("cls")
+                print("-------------------------------------------------")
+                print("----------- PROYECTO ENCONTRADO -----------------")
+                print("-------------------------------------------------")
+                print(f"\nID: {pro.getIdProyecto()}")
+                print(f"NOMBRE: {pro.getNomProyecto()}")
+                print(f"DESCRIPCION: {pro.getDescripcion()}")
+                print(f"FECHA INICIO: {pro.getFechaInicio()}")
+                print(f"ESTADO: {pro.getNombreEstado()}", end="\n\n")
+                print(" ")
+                print("\n1- MODIFICAR NOMBRE")
+                print("2- MODIFICAR DESCRIPCION")
+                print("3- MODIFICAR FECHA INICIO")
+                print("4- MODIFICAR ESTADO")
+                print("5- VOLVER")
+                system("pause")
+                op = int(input("\nDigite una opción: "))
+
 
     def __eliminarProyecto(self):
         pass

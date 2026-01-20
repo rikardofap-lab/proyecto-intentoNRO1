@@ -149,8 +149,7 @@ class dao:
 
 # BUSCAR EMPLEADO   
     def BuscarEmpleado(self, rut):
-        try:
-            self.conectar()
+        try:          
             sql = """SELECT rut_emp, nom_emp, app_emp, apm_emp, dir_emp, tel_emp, ema_emp, fec_nac_emp, fec_ini_emp, sal_emp, nom_est, id_pro, nom_tip_acc 
                 FROM empleados e 
                 INNER JOIN estados est 
@@ -160,6 +159,7 @@ class dao:
                 WHERE rut_emp =%s
                 AND e.id_est = 1
                 ORDER BY nom_emp ASC"""
+            self.conectar()
             self.cursor.execute(sql, (rut,))
             rs = self.cursor.fetchone()
             self.desconectar()
@@ -307,7 +307,9 @@ class dao:
         except Exception as e:
             print(f"Error en listado genérico (DAO): {e}")
             return []
-            
+
+#--------------------------------------------------------------------------------------------------------------------------------
+
     def insertarProyecto(self, proyecto):
         try:
             sql = """INSERT INTO proyectos (
@@ -344,3 +346,26 @@ class dao:
             print(f"Error en listado de proyectos (DAO): {e}")
             return []
 
+    def buscarProyecto(self, id_proyecto):
+        try:
+            sql = """SELECT id_pro, nom_pro, des_pro, fec_ini_pro, nom_est 
+            FROM proyectos p
+            INNER JOIN estados e
+            ON p.id_est = e.id_est 
+            WHERE id_pro = %s"""
+            self.conectar()
+            self.cursor.execute(sql, (id_proyecto,))
+            rs = self.cursor.fetchone()
+            self.desconectar()
+            if rs is None:
+                return None
+            else:
+                pro = proyecto()
+                pro.setIdProyecto(rs[0])
+                pro.setNomProyecto(rs[1])
+                pro.setDescripcion(rs[2])
+                pro.setFechaInicio(rs[3])
+                pro.setNombreEstado(rs[4])
+                return pro
+        except Exception as e:
+            print(f"Error al buscar el proyecto (DAO): {e}")
