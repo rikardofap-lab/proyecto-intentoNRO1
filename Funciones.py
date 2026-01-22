@@ -1047,39 +1047,88 @@ class funciones:
                 print(f"FECHA INICIO: {pro.getFechaInicio()}")
                 print(f"ESTADO: {pro.getNombreEstado()}", end="\n\n")
                 system("pause")
+                return pro
         except Exception as e:
             print(f"\n¡ERROR! Al buscar el proyecto: {e}", end="\n\n")
             system("pause")
             return
 
     def __modificarProyecto(self):
-        try:
-            print("-------------------------------------------------")
-            print("-------------- MODIFICAR PROYECTO ----------------")
-            print("-------------------------------------------------")
-            pro = self.dao.buscarProyecto()
-            if pro is None:
-                print("No hay un proyecto registrado con ese ID.", end="\n\n")
-                system("pause")
-                return
-            else:
+            try:
                 system("cls")
                 print("-------------------------------------------------")
-                print("----------- PROYECTO ENCONTRADO -----------------")
+                print("-------------- MODIFICAR PROYECTO ----------------")
                 print("-------------------------------------------------")
-                print(f"\nID: {pro.getIdProyecto()}")
-                print(f"NOMBRE: {pro.getNomProyecto()}")
-                print(f"DESCRIPCION: {pro.getDescripcion()}")
-                print(f"FECHA INICIO: {pro.getFechaInicio()}")
-                print(f"ESTADO: {pro.getNombreEstado()}", end="\n\n")
-                print(" ")
-                print("\n1- MODIFICAR NOMBRE")
-                print("2- MODIFICAR DESCRIPCION")
-                print("3- MODIFICAR FECHA INICIO")
-                print("4- MODIFICAR ESTADO")
-                print("5- VOLVER")
+                
+                # Buscamos y recuperamos el objeto completo del proyecto
+                pro = self.__buscarProyecto()
+                
+                if pro is None:
+                    print("EL PROYECTO NO EXISTE, VERIFIQUE EL ID DEL PROYECTO...", end="\n\n")
+                    system("pause")
+                    return 
+                
+                id_proyecto = pro.getIdProyecto() #
+                
+                while True:
+                    try:
+                        system("cls")
+                        print(f"Modificando: {pro.getNomProyecto()} (ID: {id_proyecto})")
+                        print("-------------------------------------------------")
+                        print("1- MODIFICAR NOMBRE PROYECTO")
+                        print("2- MODIFICAR DESCRIPCIÓN PROYECTO")
+                        print("3- MODIFICAR FECHA INICIO PROYECTO")
+                        print("4- MODIFICAR ESTADO PROYECTO")
+                        print("5- VOLVER")
+                        
+                        dato = int(input("\nDigite una opción: "))
+                        
+                        if dato == 5: return
+                        
+                        nuevo = None
+                        if 1 <= dato <= 4:
+                            if dato == 1:
+                                nuevo = self.__obtener_apellido("MODIFICAR PROYECTO (NOMBRE)")
+                            elif dato == 2:
+                                nuevo = self.__obtener_apellido("MODIFICAR PROYECTO (DESCRIPCIÓN)")
+                            elif dato == 3:
+                                nuevo = self.__obtener_fecha("MODIFICAR PROYECTO (FECHA INICIO)")
+                            elif dato == 4:
+                                # Lógica amigable de cambio de estado
+                                estado_actual = pro.getNombreEstado()
+                                nuevo_nom = "DESHABILITADO" if estado_actual == "HABILITADO" else "HABILITADO"
+                                
+                                print(f"\nEl proyecto está actualmente {estado_actual}.")
+                                print(f"¿Desea cambiarlo a {nuevo_nom}?")
+                                print("1.- SÍ, CAMBIAR | 2.- NO, MANTENER")
+                                
+                                if input("\nSeleccione una opción: ") == "1":
+                                    nuevo = 2 if estado_actual == "HABILITADO" else 1
+                                else:
+                                    print("\nOperación cancelada. No se realizaron cambios.")
+                                    system("pause")
+                                    continue # Volvemos a mostrar el menú de opciones
+
+                            # Si llegamos aquí y 'nuevo' tiene datos, guardamos en la BD
+                            if self.dao.modificarProyecto(dato, nuevo, id_proyecto):
+                                print(f"\n¡ÉXITO! Se ha actualizado el proyecto correctamente.")
+                            else:
+                                print(f"\n¡ERROR! Hubo un problema al conectar con la base de datos.")
+                            
+                            system("pause")
+                            return # Salimos al menú anterior tras el éxito
+                        else:
+                            print("\nOpción inválida. Elija entre 1 y 5.")
+                            system("pause")
+                            
+                    except ValueError:
+                        print("\n¡ERROR! El ID debe ser un número entero.")
+                        system("pause")
+
+            except Exception as e:
+                print(f"\n¡ERROR! Inesperado al modificar el proyecto: {e}", end="\n\n")
                 system("pause")
-                op = int(input("\nDigite una opción: "))
+                return
 
 
     def __eliminarProyecto(self):

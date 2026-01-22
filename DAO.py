@@ -209,9 +209,9 @@ class dao:
             self.con.commit()
             self.desconectar()
         except Exception as e:
-            system("cls")
-            
+            system("cls")          
             print(f"Error al modificar el empleado (DAO): {e}")
+            return False
 
     def eliminarEmpleado(self, rut):
         try:
@@ -369,3 +369,23 @@ class dao:
                 return pro
         except Exception as e:
             print(f"Error al buscar el proyecto (DAO): {e}")
+
+    def modificarProyecto(self, dato, nuevo, id_proyecto):
+        try:
+            sql = ""
+            if dato == 1:
+                sql = "UPDATE proyectos SET nom_pro = %s WHERE id_pro = %s"
+            elif dato == 2:
+                sql = "UPDATE proyectos SET des_pro = %s WHERE id_pro = %s"
+            elif dato == 3:
+                sql = "UPDATE proyectos SET fec_ini_pro = %s WHERE id_pro = %s"
+            elif dato == 4: 
+                sql = "UPDATE proyectos SET id_est = %s WHERE id_pro = %s"
+            self.conectar()
+            self.cursor.execute(sql, (nuevo, id_proyecto))
+            self.con.commit()
+            self.desconectar()
+            return True
+        except Exception as e:
+            print(f"Error al modificar el proyecto (DAO): {e}")
+            return False
