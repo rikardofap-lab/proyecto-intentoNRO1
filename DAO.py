@@ -389,3 +389,18 @@ class dao:
         except Exception as e:
             print(f"Error al modificar el proyecto (DAO): {e}")
             return False
+        
+    def eliminarProyecto(self, id_proyecto):
+        try:
+            sql = "UPDATE proyectos SET id_est = 2 WHERE id_pro = %s"
+            self.conectar()
+            self.cursor.execute(sql, (id_proyecto,))
+            self.con.commit()
+            self.desconectar()
+            return True
+        except Exception as e:
+            print(f"Error al eliminar el proyecto (DAO): {e}")
+            return False
+        finally:
+            self.desconectar()
+            

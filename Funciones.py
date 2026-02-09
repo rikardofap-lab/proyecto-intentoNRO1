@@ -1130,9 +1130,42 @@ class funciones:
                 system("pause")
                 return
 
-
     def __eliminarProyecto(self):
-        pass
+        try:
+            while True:
+                system("cls")
+                print("--------------------------------------------")
+                print("------------ ELIMINAR PROYECTO -------------")
+                print("--------------------------------------------")
+                pro = self.__buscarProyecto()
+                if pro is None:
+                    return
+                if pro.getNombreEstado() == "DESHABILITADO":
+                    print(f"El proyecto {pro.getNomProyecto()} (ID: {pro.getIdProyecto()}) ya se encuentra deshabilitado", end="\n\n")
+                    system("pause")
+                    return
+                else:
+                    try:
+                        opcion = int(input(f"\nEstá seguro de desvincular el proyecto: {pro.getNomProyecto()} (ID: {pro.getIdProyecto()}) ? \n1- Si \n2- No \nDigite una opción: "))
+                        system("cls")
+                        if opcion == 1:
+                            self.dao.eliminarProyecto(pro.getIdProyecto())
+                            print(f"\nSe ha desvinculado el proyecto: {pro.getNomProyecto()} (ID: {pro.getIdProyecto()})", end="\n\n")
+                            system("pause")
+                            return
+                        elif opcion == 2:
+                            return
+                        else:
+                            print("\n--- Error De Opcion De Menú Eliminar Proyecto Debe Ser Del 1 al 2!! Volviendo al menu Eliminar Proyecto---", end="\n\n")
+                            system("pause")
+                            continue
+                    except ValueError:
+                        print("\n¡ERROR! Debe ingresar un número para ésta opcion.")
+                        system("pause")
+        except Exception as e:
+            print(f"\n¡ERROR! Al eliminar el proyecto: {e}", end="\n\n")
+            system("pause")
+            return
 
     def __estadisticasProyectos(self):
         pass
@@ -1140,7 +1173,7 @@ class funciones:
 #-------------------------------------------------------------------------------------------
 #   FUNCIONES MENU ASIGNACION DE PROYECTOS
     def __asignarEmpleado(self):
-        pass
+        
 
     def __reasignarEmpleado(self):
         pass

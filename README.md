@@ -139,3 +139,13 @@ El proyecto sigue el patrón de diseño **DAO (Data Access Object)**, separando 
     MODIFICAR PROYECTO EN PROCESO:
     FUNCIONES POCO AVANZADO
     DAO (MODIFICAR PROYECTO) AUN NO EMPEZADO
+
+    ## 📅 Fecha: 21 de enero, 2026 (Cierre de Ciclo CRUD)
+**Objetivo:** Implementación de baja lógica de proyectos y finalización del módulo.
+
+---
+
+### ✅ Logros y Avances
+* **Borrado Lógico:** Se implementó `__eliminarProyecto` bajo el estándar de "Desvinculación Lógica" (UPDATE `id_est = 2`), garantizando que no se pierda la trazabilidad histórica de los datos.
+* **Integridad Referencial:** Al evitar el uso de `DELETE`, se protegen las relaciones de llaves foráneas en la tabla `empleados`.
+* **Robustez en DAO:** Se estandarizó el uso de bloques `finally` y `con.commit()` para asegurar transacciones limpias y cierres de conexión seguros.
