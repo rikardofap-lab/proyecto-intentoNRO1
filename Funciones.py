@@ -1168,12 +1168,37 @@ class funciones:
             return
 
     def __estadisticasProyectos(self):
-        pass
+        resumen = self.dao.obtenerEstadisticasProyecto()
+        if not resumen:
+            system("cls")
+            print("---------------------------------------------------------")
+            print("----------- ESTADÍSTICAS DE PROYECTOS ACTIVOS -----------")
+            print("---------------------------------------------------------")
+
+            print("\nNo hay datos suficientes para mostrar estadisticas.")
+            system("pause")
+            return
+        else:
+            system("cls")
+            print("---------------------------------------------------------")
+            print("----------- ESTADÍSTICAS DE PROYECTOS ACTIVOS -----------")
+            print("---------------------------------------------------------")
+
+            tabla = PrettyTable()
+            tabla.field_names = ["PROYECTO", "CANT. EMPLEADOS", "COSTO PLANILLA"]
+            for fila in resumen:
+                nombre = fila[0]
+                cantidad_empleados = fila[1]
+                costo = fila[2] if fila[2] else 0
+                tabla.add_row([nombre, cantidad_empleados, f"${costo:,.2f}"])
+            print(tabla)
+            system("pause")
+
 
 #-------------------------------------------------------------------------------------------
 #   FUNCIONES MENU ASIGNACION DE PROYECTOS
     def __asignarEmpleado(self):
-        
+        pass
 
     def __reasignarEmpleado(self):
         pass

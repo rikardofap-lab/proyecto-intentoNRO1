@@ -149,3 +149,28 @@ El proyecto sigue el patrón de diseño **DAO (Data Access Object)**, separando 
 * **Borrado Lógico:** Se implementó `__eliminarProyecto` bajo el estándar de "Desvinculación Lógica" (UPDATE `id_est = 2`), garantizando que no se pierda la trazabilidad histórica de los datos.
 * **Integridad Referencial:** Al evitar el uso de `DELETE`, se protegen las relaciones de llaves foráneas en la tabla `empleados`.
 * **Robustez en DAO:** Se estandarizó el uso de bloques `finally` y `con.commit()` para asegurar transacciones limpias y cierres de conexión seguros.
+
+Fecha: 14 de febrero, 2026
+Hito: Finalización y Certificación del Módulo Proyectos (CRUD Completo)
+
+✅ Desarrollo de Capas
+Interfaz de Usuario (Funciones.py):
+
+Implementación de __buscarProyecto con validación de tipos y retorno de objetos para flujo dinámico.
+
+Refactorización de __modificarProyecto y __eliminarProyecto con validación de existencia previa.
+
+Mejora de UX: Se integraron menús de confirmación y mensajes informativos antes de cambios críticos de estado.
+
+Capa de Datos (DAO.py):
+
+Estandarización de bloques try-except-finally para asegurar el cierre de conexiones y evitar fugas de memoria.
+
+Implementación de Baja Lógica: Los proyectos se deshabilitan (id_est = 2) en lugar de eliminarse físicamente para mantener la integridad referencial.
+
+Estadísticas Avanzadas: Uso de LEFT JOIN y GROUP BY para reportar carga de empleados y costos de planilla por proyecto, incluyendo aquellos sin personal asignado.
+
+🧪 Pruebas y Calidad
+Test de Fuego Automatizado: Se creó TestProyecto.py con gestión dinámica de rutas (sys.path), certificando el ciclo completo: Inserción ➡️ Búsqueda ➡️ Modificación ➡️ Eliminación Lógica.
+
+Depuración: Identificación de duplicados en la base de datos y corrección de la lógica de persistencia.

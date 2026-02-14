@@ -25,7 +25,11 @@ class dao:
 #----------------------------------------------------------------------------------------------
 
     def desconectar(self):
-        self.con.close()
+        try:
+            if self.con.open:
+                self.con.close()
+        except:
+            pass
 
 #----------------------------------------------------------------------------------------------
 # COMPRUEBO SI EL RUT DEL EMPLEADO ESTÁ O NO EN LA BASE DE DATOS
@@ -403,4 +407,23 @@ class dao:
             return False
         finally:
             self.desconectar()
-            
+
+    def obtenerEstadisticasProyecto(self):
+        try:
+            sql = """
+                SELECT p.nom_pro, COUNT(e.id_emp), SUM(IFNULL(e.sal_emp, 0))
+                FROM proyectos p
+                LEFT JOIN empleados e
+                ON p.id_pro = e.id_pro
+                AND e.id_est = 1
+                GROUP BY p.nom_pro
+                """
+            self.conectar()
+            self.cursor.execute(sql)
+            rs = self.cursor.fetchall()
+            return rs
+        except Exception as e:
+            print(f"Error al obtener las estadísticas de proyectos (DAO): {e}")
+            return []
+        finally:
+            self.desconectar()
