@@ -427,3 +427,17 @@ class dao:
             return []
         finally:
             self.desconectar()
+
+    def asignarEmpleadoaProyecto(self, rut_empleado, id_proyecto):
+        try:
+            sql = """ UPDATE empleados 
+            SET id_pro = %s
+            WHERE rut_emp = %s"""
+            self.conectar()
+            self.cursor.execute(sql, (id_proyecto, rut_empleado))
+            self.con.commit()
+            return self.cursor.rowcount > 0
+        except Exception as e:
+            print(f"Error al asignar el empleado al proyecto (DAO): {e}")
+        finally:
+            self.desconectar()

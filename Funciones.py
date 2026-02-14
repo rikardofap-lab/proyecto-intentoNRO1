@@ -1198,16 +1198,75 @@ class funciones:
 #-------------------------------------------------------------------------------------------
 #   FUNCIONES MENU ASIGNACION DE PROYECTOS
     def __asignarEmpleado(self):
-        pass
+        try:
+            system("cls")
+            print("-------------------------------------------------")
+            print("-------------- ASIGNAR EMPLEADOS ----------------")
+            print("-------------------------------------------------")
+            self.__listarEmpleadosSinAsignar()
+            self.__listarProyectos()
+            print("\nINGRESE EL RUT DEL EMPLEADO A ASIGNAR:", end="\n\n")
+            rut = self.__obtener_rut_validado(titulo_menu="ASIGNAR EMPLEADO (RUT)")
+            pro = input("\nINGRESE EL ID DEL PROYECTO AL CUAL DESEA ASIGNAR AL EMPLEADO: ", end="\n\n")
+            if not pro.isdigit():
+                print("EL ID DEL PROYECTO DEBE SER UN NUMERO ENTERO", end="\n\n")
+                system("pause")
+                return
+            else:
+                pro = int(pro)
+                if self.dao.asignarEmpleadoaProyecto(rut, pro):
+                    print(f"EL EMPLEADO {rut} SE HA ASIGNADO AL PROYECTO {pro} EXITOSAMENTE", end="\n\n")
+                    system("pause")
+                    return
+                else:
+                    print("\nNO SE ENCONTRÓ EL EMPLEADO O EL PROYECTO ES INVÁLIDO")
+                    system("pause")
+        except Exception as e:
+            print(f"\n¡ERROR! Al asignar el empleado: {e}", end="\n\n")
+            system("pause")
+          
 
     def __reasignarEmpleado(self):
         pass
 
     def __listarEmpleadosAsignados(self):
-        pass
+        try:
+            datos_empleados = self.dao.listarEmpleadosGeneral(4)
+            if not datos_empleados:
+                print("No hay empleados asignados a ningún proyecto.", end="\n\n")
+                system("pause")
+                return
+            else:
+                tabla = PrettyTable()
+                tabla.field_names = ["RUT", "NOMBRE", "AP. PATERNO", "AP. MATERNO", "TELEFONO", "EMAIL", "SALARIO", "ESTADO", "ID PROYECTO"]
+                for d in datos_empleados:
+                    tabla.add_row(d)
+                print(tabla, end="\n\n")
+                system("pause")
+        except Exception as e:
+            print(f"\n¡ERROR! Al listar los empleados asignados: {e}", end="\n\n")
+            system("pause")
+            return
 
     def __listarEmpleadosSinAsignar(self):
-        pass
+        try:
+            datos_empleados = self.dao.listarEmpleadosGeneral(5)
+            if not datos_empleados:
+                print("Todos los empleados se encuentran asignados a un proyecto actualmente.", end="\n\n")
+                system("pause")
+                return
+            else:
+                lista = PrettyTable()
+                lista.field_names = ["RUT", "NOMBRE", "AP. PATERNO", "AP. MATERNO", "TELEFONO", "EMAIL", "SALARIO", "ESTADO"]
+                for d in datos_empleados:
+                    lista.add_row(d[:-1])
+                print(lista, end="\n\n")
+                system("pause")
+        except Exception as e:
+            print(f"\n¡ERROR! Al listar los empleados sin asignar: {e}", end="\n\n")
+            system("pause")
+            return
+
 
 #---------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------

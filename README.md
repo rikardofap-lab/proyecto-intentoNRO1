@@ -174,3 +174,15 @@ Estadísticas Avanzadas: Uso de LEFT JOIN y GROUP BY para reportar carga de empl
 Test de Fuego Automatizado: Se creó TestProyecto.py con gestión dinámica de rutas (sys.path), certificando el ciclo completo: Inserción ➡️ Búsqueda ➡️ Modificación ➡️ Eliminación Lógica.
 
 Depuración: Identificación de duplicados en la base de datos y corrección de la lógica de persistencia.
+
+Módulo de Gestión y Asignación de Proyectos
+
+Capa de Datos (DAO): Se estandarizó la "Navaja Suiza" (listarEmpleadosGeneral) para manejar 5 criterios de filtrado distintos, optimizando la recuperación de registros según el estado de asignación.
+
+Lógica de Negocio: Implementación de asignarEmpleadoaProyecto con validación de impacto real en la base de datos mediante rowcount.
+
+Interfaz de Usuario:
+
+Creación de listados dinámicos con PrettyTable.
+
+Uso de Slicing de Python (d[:-1]) para "purificar" la visualización de datos irrelevantes en reportes específicos.
