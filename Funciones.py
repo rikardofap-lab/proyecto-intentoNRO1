@@ -197,7 +197,7 @@ class funciones:
                 print("\n1.- ASIGNAR EMPLEADO A PROYECTO")
                 print("2.- REASIGNAR EMPLEADO")
                 print("3.- LISTAR EMPLEADOS ASIGNADOS")
-                print("4.- LISTAR EMPLEADOS SIN ASIGNADOS")
+                print("4.- LISTAR EMPLEADOS SIN ASIGNAR")
                 print("5.- VOLVER")
 
                 op = int(input("\nDigite una opción: "))
@@ -541,7 +541,7 @@ class funciones:
             system("pause")
             self.__menuGerente()
 
-    def __buscarEmpleado(self):
+    def __buscarEmpleado(self) -> empleado:
             try:
                 rut = self.__obtener_rut_validado(titulo_menu="BUSCAR EMPLEADO (RUT)")
                 emp = self.dao.BuscarEmpleado(rut)
@@ -549,7 +549,7 @@ class funciones:
                 if emp is None:
                     print(f"El rut {rut} no corresponde a un empleado registrado en la base de datos", end="\n\n")
                     system("pause")
-                    self.__menuGerente()
+                    return None
                     
                 else:
                     system("cls")
@@ -571,12 +571,13 @@ class funciones:
                     print(F"ID PROYECTO:---------> {emp.getIdProyecto()}")
                     print(F"TIPO ACCESO:---------> {emp.getIdTipoAcc()}", end="\n\n")
                     system("pause")
-                    self.__menuGerente()
+                    return emp
 
             except Exception as e:
                 print(f"\n¡ERROR! Al buscar el empleado: {e}", end="\n\n")
                 system("pause")
                 self.__menuGerente()
+                return None
         
     def __modificarEmpleado(self):
         try:
@@ -1019,7 +1020,7 @@ class funciones:
                 system("pause")
                 return
 
-    def __buscarProyecto(self):
+    def __buscarProyecto(self) -> proyecto:
         try:
             system("cls")
             print("---------------------------------")
@@ -1035,7 +1036,7 @@ class funciones:
             if pro is None:
                 print("No hay un proyecto registrado con ese ID.", end="\n\n")
                 system("pause")
-                return
+                return None
             else:
                 system("cls")
                 print("----------------------------------")
@@ -1051,7 +1052,7 @@ class funciones:
         except Exception as e:
             print(f"\n¡ERROR! Al buscar el proyecto: {e}", end="\n\n")
             system("pause")
-            return
+            return None
 
     def __modificarProyecto(self):
             try:
@@ -1227,7 +1228,41 @@ class funciones:
           
 
     def __reasignarEmpleado(self):
-        pass
+        try:
+            system("cls")
+            print("-----------------------------------------------------------")
+            print("------------------ REASIGNAR EMPLEADO ---------------------")
+            print("-----------------------------------------------------------")
+            print("Ingrese el RUT del empleado a reasignar y el ID del proyecto al cual desea asignarlo: ", end="\n\n")
+            system("pause")
+            empleado = self.__buscarEmpleado()
+            rut = empleado.getRut()
+            proyecto = self.__buscarProyecto()
+            id_proyecto = proyecto.getIdProyecto()
+            while True:
+                print(F"Está seguro de reasignar a {empleado.getNombres()} {empleado.getApellidoPaterno()} al proyecto {proyecto.getNomProyecto()}")
+                opcion = input("\n'S' para SI o 'N' para NO: ")
+                if opcion.upper() == 'S':
+                    if self.dao.reasignarEmpleado(rut, id_proyecto):
+                        print("Empleado reasignado exitosamente.", end="\n\n")
+                        system("pause")
+                        return
+                    else:
+                        print("Error al reasignar el empleado.", end="\n\n")
+                        system("pause")
+                        return
+                elif opcion.upper() == 'N':
+                    print("Operación cancelada.", end="\n\n")
+                    system("pause")
+                    return
+                else:
+                    print("Opción inválida. Intente nuevamente.", end="\n\n")
+                    system("pause")
+                    continue
+        except Exception as e:
+            print(f"\n¡ERROR! Al reasignar el empleado: {e}", end="\n\n")
+            system("pause")
+
 
     def __listarEmpleadosAsignados(self):
         try:

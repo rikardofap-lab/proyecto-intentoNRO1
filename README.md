@@ -186,3 +186,7 @@ Interfaz de Usuario:
 Creación de listados dinámicos con PrettyTable.
 
 Uso de Slicing de Python (d[:-1]) para "purificar" la visualización de datos irrelevantes en reportes específicos.
+
+Bitácora (16 de febrero, 2026)
+
+ASIGNAR Y REASIGNAR EMPLEADOS A PROYECTOS terminado y listo para probar script TestProyecto actualizado para probar todo lo que concierne a proyecto desde su creacion hasta su modificacion y eliminacion logica comprobando que se le asignen correctamente los empleados y a su vez reasignen correctamente. Sólo falta habilitar el inicio de sesion con credenciales de administrador y probar manualmente para ver errores de tipeo y UX.
