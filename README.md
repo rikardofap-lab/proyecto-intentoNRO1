@@ -150,7 +150,7 @@ El proyecto sigue el patrón de diseño **DAO (Data Access Object)**, separando 
 * **Integridad Referencial:** Al evitar el uso de `DELETE`, se protegen las relaciones de llaves foráneas en la tabla `empleados`.
 * **Robustez en DAO:** Se estandarizó el uso de bloques `finally` y `con.commit()` para asegurar transacciones limpias y cierres de conexión seguros.
 
-Fecha: 14 de febrero, 2026
+## Fecha: 14 de febrero, 2026
 Hito: Finalización y Certificación del Módulo Proyectos (CRUD Completo)
 
 ✅ Desarrollo de Capas
@@ -170,7 +170,7 @@ Implementación de Baja Lógica: Los proyectos se deshabilitan (id_est = 2) en l
 
 Estadísticas Avanzadas: Uso de LEFT JOIN y GROUP BY para reportar carga de empleados y costos de planilla por proyecto, incluyendo aquellos sin personal asignado.
 
-🧪 Pruebas y Calidad
+## 🧪 Pruebas y Calidad
 Test de Fuego Automatizado: Se creó TestProyecto.py con gestión dinámica de rutas (sys.path), certificando el ciclo completo: Inserción ➡️ Búsqueda ➡️ Modificación ➡️ Eliminación Lógica.
 
 Depuración: Identificación de duplicados en la base de datos y corrección de la lógica de persistencia.
@@ -187,6 +187,6 @@ Creación de listados dinámicos con PrettyTable.
 
 Uso de Slicing de Python (d[:-1]) para "purificar" la visualización de datos irrelevantes en reportes específicos.
 
-Bitácora (16 de febrero, 2026)
+## Bitácora (16 de febrero, 2026)
 
 ASIGNAR Y REASIGNAR EMPLEADOS A PROYECTOS terminado y listo para probar script TestProyecto actualizado para probar todo lo que concierne a proyecto desde su creacion hasta su modificacion y eliminacion logica comprobando que se le asignen correctamente los empleados y a su vez reasignen correctamente. Sólo falta habilitar el inicio de sesion con credenciales de administrador y probar manualmente para ver errores de tipeo y UX.
