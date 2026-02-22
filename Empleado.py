@@ -56,6 +56,14 @@ class empleado(persona):
         self.__idTipoAcc = idTipoAcc
 
 #------------------------------------------------------------
+#   NOMBRE DEL TIPO DE ACCESO (STRING)
+    def getNomTipoAcc(self):
+        return self.__NomTipoAcc
+    
+    def setNomTipoAcc(self, nomTipoAcc):
+        self.__NomTipoAcc = nomTipoAcc
+
+#------------------------------------------------------------
 #   ID PROYECTO (INT o None)
     def getIdProyecto(self):
         return self.__idProyecto

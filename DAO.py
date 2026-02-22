@@ -109,7 +109,7 @@ class dao:
     def Login(self, nomUsuario, contrasena):     
         try:
             # 1. Buscar al usuario por su nombre de usuario (nom_usu)
-            sql = "SELECT * FROM empleados WHERE nom_usu = %s"
+            sql = "SELECT * FROM empleados e INNER JOIN tipo_acceso ta ON e.id_tip_acc=ta.id_tip_acc WHERE nom_usu = %s"
             self.conectar()
             self.cursor.execute(sql, (nomUsuario,))
             rs = self.cursor.fetchone()
@@ -141,6 +141,7 @@ class dao:
                         emp.setNombres(rs[2])
                         emp.setIdTipoAcc(rs[13])
                         emp.setNombreUsuario(rs[14])
+                        emp.setNomTipoAcc(rs[18])
                         return emp
                     else:
                         return None # La contraseña no coincide

@@ -64,9 +64,10 @@ class funciones:
         while True:
             try:
                 system("cls")
-                print("--------------------------")
-                print("------ MENU GERENTE ------")
-                print("--------------------------")
+                print("----------------------------------------------------------------------")
+                print("--------------------------- MENU GERENTE -----------------------------")
+                print(f"{self.emp.getNombreUsuario()} {self.emp.getNomTipoAcc()}")
+                print("----------------------------------------------------------------------")
                 print("\n1.- CREAR EMPLEADO")
                 print("2.- LISTAR EMPLEADOS")
                 print("3.- BUSCAR EMPLEADO")
@@ -77,7 +78,7 @@ class funciones:
 
                 op = int(input("\nDigite una opción: "))
 
-                if op > 0 or op <= 7:
+                if 1 <= op <= 7:
                     if op == 1:
                         self.__crearEmpleado()
                     elif op == 2:
@@ -91,7 +92,7 @@ class funciones:
                     elif op == 6:
                         self.__estadisticasEmpleados()
                     elif op == 7:
-                        self.menuInicial()
+                        return
                     else:
                         print("\n--- Error De Opcion De Menú Gerente!! ---", end="\n\n")
                         system("pause")
