@@ -1,4 +1,4 @@
-from Persona import persona
+from core.Persona import persona
 
 class empleado(persona):
     __fechaInicioContrato = ""

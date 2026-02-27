@@ -1,7 +1,7 @@
-from Empleado import empleado
-from Proyecto import proyecto
-from TipoAcceso import tipoAcceso
-from DAO import dao
+from core.Empleado import empleado
+from core.Proyecto import proyecto
+from core.TipoAcceso import tipoAcceso
+from database.DAO import dao
 from prettytable import PrettyTable
 from datetime import date
 from os import system
@@ -17,37 +17,36 @@ class funciones:
     def menuInicial(self):
         while True:
             try:
-                system("cls")
-                print("-------------------------")
-                print("------ MENU INICIAL------")
-                print("-------------------------")
-                print("\n1.- INICIAR SESION")
-                print("\nTEMPORALMENTE SIN INICIO DE SESION")
-                print("1.- MENU GERENTE")
-                print("2.- MENU GESTION DE PROYECTOS")
-                print("3.- MENU ASIGNACION DE EMPLEADOS")
-                print("4.- SALIR")
-
-                op = int(input("\nDigite una opción: "))
-                if op > 0 or op <= 4:
-                #if op == 1:
-                    #self.__iniciarSesion()
+                if self.emp is None:
+                    system("cls")
+                    print("-------------------------")
+                    print("------ MENU INICIAL------")
+                    print("-------------------------")
+                    print("\n1.- INICIAR SESION")
+                    print("2.- SALIR")
+                    op = int(input("\nDigite una opción: "))
                     if op == 1:
-                        self.__menuGerente()
+                        self.__iniciarSesion()
                     elif op == 2:
-                        self.__menuGestionProyectos()
-                    elif op == 3:
-                        self.__asignacionProyectos()
-                    elif op == 4:
-                        system("cls")
-                        print("¡Gracias por usar el programa!")
-                        print("¡Hasta Pronto!", end="\n\n")
-                        system("pause")
                         self.salir()
                     else:
-                        print("\n--- Error De Opcion De Menú Inicial!! Solo Puede Seleccionar Entre 1 y 2---", end="\n\n")
+                        print("\n--- Error De Opcion De Menú Inicial!! ---", end="\n\n")
                         system("pause")
-                        continue                      
+                        continue
+
+                else:      # Redirección automática según el ID de Acceso
+                    rol = self.emp.getIdTipoAcc()
+
+                    if rol == 1:
+                        self.__menuGestionProyectos()
+                    elif rol == 2:
+                        self.__menuGerente()
+                    elif rol == 3:
+                        self.__menuAsignacionEmpleados()
+                    elif rol == 4:
+                        print("No tienes permisos de acceso")
+                        self.emp = None
+                        system("pause")             
             except ValueError:
                     print("\n¡ERROR! LA OPCION DEBE INGRESARSE SOLO CON NUMEROS (1, 2 Y 3)")
                     system("pause")
@@ -155,40 +154,28 @@ class funciones:
         while True:
             try:
                 system("cls")
-                print("--- MENU INICIAL (INICIO DE SESIÓN) ---")
-                rut = input("\nIngrese su rut: ")
-                if len(rut.strip().isdigit()) > 12 or len(rut.strip().isdigit()) < 10:
-                    print("\n--- El Rut Debe Tener Entre 10 y 12 Caracteres!! ---", end="\n\n")
+                print("-------------------------------")
+                print("------- INICIO SESIÓN ---------")
+                print("-------------------------------")
+                usu = input("\nIngrese su usuario: ")
+                con = input("\nIngrese su contraseña: ")
+
+                usuario_logeado = self.dao.Login(usu, con)
+                if usuario_logeado:
+                    self.emp = usuario_logeado
+                    print(f"\nBienvenido {self.emp.getNombres()}")
                     system("pause")
-                    continue
+                    return True          
                 else:
-                    break
-            except ValueError:
-                print("\nEl rut debe ser escrito solo con numeros y guion")
-                system("pause")
-                continue
+                    print("\nUsuario y contraseña incorrectos. Intente de nuevo.")
+                    return False
             except Exception as e:
                 print(f"\n--- Error Al Capturar Rut (Login)!! --- {e}", end="\n\n")
                 system("pause")
                 continue
         #-----------------------------------------------------------------------------------------
-        while True:
-            try:
-                system("cls")
-                print("--- MENU INICIAL (INICIO DE SESIÓN) ---")
-                contrasena = input("\nIngrese su contraseña: ")
-                if len(contrasena.strip()) > 1 or len(contrasena.strip()) < 20:
-                    print("\n--- La Contraseña Debe Tener Entre 1 y 20 Caracteres!! ---", end="\n\n")
-                    system("pause")
-                    continue
-                else:
-                    break
-            except Exception as e:
-                print(f"\n--- Error Al Capturar Contraseña (Login)!! --- {e}", end="\n\n")
-                system("pause")
-                continue
 
-    def __asignacionProyectos(self):
+    def __menuAsignacionEmpleados(self):
         while True:
             try:
                 system("cls")
@@ -213,7 +200,7 @@ class funciones:
                     elif op == 4:
                         self.__listarEmpleadosSinAsignar()
                     elif op == 5:
-                        self.menuInicial()
+                        return
                     else:
                         print("\n--- Error De Opcion De Menú Asignación Proyectos!! ---", end="\n\n")
                         system("pause")
@@ -441,13 +428,13 @@ class funciones:
                 print("---------------------------------------")
                 print("--- CREAR EMPLEADO (TIPO DE ACCESO) ---")
                 print("---------------------------------------")
-                tipoAcceso = int(input("\nIngrese tipo de acceso del empleado (1 GESTION DE PROYECTOS, 2 GERENTE, 3 EMPLEADO SIN ACCESO): "))
-                if 1 <= tipoAcceso <= 3:
+                tipoAcceso = int(input("\nIngrese tipo de acceso del empleado \n1. GESTION DE PROYECTOS, \n2. GERENTE \n 3. ASIGNACION DE EMPLEADOS \n4. EMPLEADO SIN ACCESO): "))
+                if 1 <= tipoAcceso <= 4:
                     print("\nTipo de acceso guardado correctamente:", tipoAcceso)
                     system("pause")
                     break
                 else:
-                    print("\nEl tipo de acceso debe ser entre 1 y 3")
+                    print("\nEl tipo de acceso debe ser entre 1 y 4")
                     system("pause")
                     continue
             except ValueError:
@@ -465,7 +452,7 @@ class funciones:
         contrasena = None # Aquí se almacenará la contraseña en texto plano, el DAO debería encriptarla antes de guardar
  
         # Si el tipo de acceso es GERENTE (2) o GESTION DE PROYECTOS (1), se debe crear un usuario.
-        if tipoAcceso == 1 or tipoAcceso == 2:
+        if tipoAcceso == 1 or tipoAcceso == 2 or tipoAcceso == 3:
             system("cls")
             print("-----------------------------------------")
             print("--- CREAR EMPLEADO (USUARIO EMPLEADO) ---")
@@ -1302,109 +1289,3 @@ class funciones:
             print(f"\n¡ERROR! Al listar los empleados sin asignar: {e}", end="\n\n")
             system("pause")
             return
-
-
-#---------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------
-#-------------------------------------- FUNCIONES REUTILIZABLES ------------------------------------------
-#---------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------
-
-    def __obtener_rut_validado(self,titulo_menu: str):
-        """
-        Pide un RUT al usuario, lo valida (formato y dígito 'K') 
-        y lo retorna formateado (ej: "12345678-K").
-        Este bucle se repite hasta que el RUT ingresado sea válido.
-        """
-        while True:
-            system("cls")
-            print("-------------------------------------------")
-            print(f"--------- {titulo_menu} ---------")
-            print("-------------------------------------------")
-            
-            # 1. Pedir y limpiar (acepta "11 111 111 k")
-            rut_sin_formato = input("\nIngrese RUT (SIN puntos y SIN guion) puede usar espacios para separar digitos (Ej: 11 111 111 k): ").strip().replace(" ", "")
-
-            # 2. Validar longitud
-            if (8 <= len(rut_sin_formato) <= 10):
-                    # 3. Separar cuerpo y DV
-                    cuerpo = rut_sin_formato[:-1]
-                    dv = rut_sin_formato[-1].upper() # Convertir 'k' a 'K'
-            else:
-                    print("\nError: El RUT debe tener entre 8 y 10 caracteres.")
-                    system("pause")
-                    continue
-
-            if cuerpo.isdigit() and (dv.isdigit() or dv == 'K'):
-                rut_formateado = f"{cuerpo}-{dv}"
-                return rut_formateado
-            else:
-                print("\nError: El RUT contiene caracteres no válidos.")
-                print("(Recuerde: solo números y 'k' al final si corresponde)")
-                system("pause")
-                continue
-
-    #---------------------------------------------------------------------------------------------------------
-    def __obtener_fecha(self,titulo_pantalla: str) -> date:
-        """
-        Solicita al usuario una fecha (día, mes, año), la valida y la devuelve.
-        Repite el proceso hasta que se ingrese una fecha válida.
-
-        Args:
-            titulo_pantalla (str): El título que se mostrará en la pantalla de ingreso.
-
-        Returns:
-            date: El objeto de fecha validado.
-        """
-        while True:
-            try:
-                system("cls")
-                print("------------------------------------------")
-                print(f"--- {titulo_pantalla.upper()} ---")
-                print("------------------------------------------")
-
-                print("\nIngrese la fecha:")
-                dia = int(input("Día (DD): "))
-                mes = int(input("Mes (MM): "))
-                anio = int(input("Año (AAAA): "))
-
-                # Validar y construir la fecha
-                fecha_validada = date(anio, mes, dia)
-                return fecha_validada # Si la fecha es válida, la retornamos y salimos de la función
-
-            except ValueError:
-                print("\nError: Fecha inválida. Verifique los valores ingresados.")
-                system("pause")
-                continue
-    #---------------------------------------------------------------------------------------------------------
-
-    def __obtener_apellido(self, titulo_pantalla: str) -> str:
-        while True:
-                try:
-                    system("cls")
-                    print("-------------------------------------------")
-                    print(f"---- {titulo_pantalla.upper()} ----")
-                    print("-------------------------------------------")
-
-                    appellido_ingresado = input(f"\nIngrese {titulo_pantalla.lower()}  del empleado: ").strip()
-                    if appellido_ingresado.isalpha() and len(appellido_ingresado) >= 2 and len(appellido_ingresado) <= 20:
-                        ape_formateado = appellido_ingresado.capitalize()
-                        print(f"\n{titulo_pantalla.lower()} guardado correctamente:",ape_formateado )
-                        system("pause")
-                        return ape_formateado
-                    else:
-                        print("\nEl apellido debe tener entre 2 y 20 caracteres")
-                        system("pause")
-                        continue
-                except Exception as e:
-                    print(f"\n¡ERROR! Al ingresar el apellido del empleado: {e}", end="\n\n")
-                    system("pause")
-                    continue
-
-    def __listarAdministradores(self):
-        pass
-#---------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------

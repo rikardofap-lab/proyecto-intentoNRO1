@@ -55,7 +55,8 @@ INSERT INTO estados (id_est, nom_est) VALUES (1, 'HABILITADO'), (2, 'DESHABILITA
 INSERT INTO tipo_acceso (id_tip_acc, nom_tip_acc) VALUES 
 (1, 'GESTION DE PROYECTOS'), 
 (2, 'GERENTE'), 
-(3, 'EMPLEADO SIN ACCESO');
+(3, 'GESTOR DE PERSONAL'),
+(4, 'EMPLEADO SIN ACCESO');
 
 INSERT INTO sexos (id_sex, nom_sex) VALUES (1, 'MASCULINO'), (2, 'FEMENINO'), (3, 'OTRO');
 

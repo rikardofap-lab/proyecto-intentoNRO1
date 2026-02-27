@@ -2,8 +2,8 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from DAO import dao
-from Proyecto import proyecto
+from database.DAO import dao
+from core.Proyecto import proyecto
 
 def test_sistema():
     midao = dao() 

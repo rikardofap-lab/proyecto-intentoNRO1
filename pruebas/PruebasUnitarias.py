@@ -1,6 +1,6 @@
 import unittest
-from DAO import dao
-from Funciones import funciones
+from database.DAO import dao
+from ui.Funciones import funciones
 from datetime import date
 
 class TestProyectoNro1(unittest.TestCase):

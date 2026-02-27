@@ -1,7 +1,7 @@
 import unittest
-from DAO import dao
-from Empleado import empleado
-from Proyecto import proyecto
+from database.DAO import dao
+from core.Empleado import empleado
+from core.Proyecto import proyecto
 
 class TestFuegoTotal(unittest.TestCase):
     def setUp(self):

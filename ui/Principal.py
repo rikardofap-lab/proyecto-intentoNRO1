@@ -1,4 +1,4 @@
-from Funciones import funciones
+from ui.Funciones import funciones
 
 class principal:
     __f = funciones()
